@@ -7,9 +7,9 @@ use App\Models\Task;
 use App\Models\User;
 
 beforeEach(function () {
-    $this->user     = User::factory()->create();
-    $this->token    = auth('api')->login($this->user);
-    $this->project  = Project::factory()->for($this->user)->create();
+    $this->user = User::factory()->create();
+    $this->token = auth('api')->login($this->user);
+    $this->project = Project::factory()->for($this->user)->create();
     $this->endpoint = '/api/tasks';
 });
 
@@ -54,8 +54,8 @@ it('creates a task in own project', function () {
     $this->withToken($this->token)
         ->postJson($this->endpoint, [
             'project_id' => $this->project->id,
-            'title'      => 'New Task',
-            'priority'   => 'high',
+            'title' => 'New Task',
+            'priority' => 'high',
         ])
         ->assertCreated()
         ->assertJsonPath('data.title', 'New Task')
@@ -70,7 +70,7 @@ it('rejects creating task in another user project', function () {
     $this->withToken($this->token)
         ->postJson($this->endpoint, [
             'project_id' => $foreign->id,
-            'title'      => 'Hack Task',
+            'title' => 'Hack Task',
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors('project_id');

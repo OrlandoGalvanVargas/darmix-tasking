@@ -4,9 +4,9 @@ use App\Models\Project;
 use App\Models\User;
 
 beforeEach(function () {
-    $this->user      = User::factory()->create();
-    $this->token     = auth('api')->login($this->user);
-    $this->endpoint  = '/api/projects';
+    $this->user = User::factory()->create();
+    $this->token = auth('api')->login($this->user);
+    $this->endpoint = '/api/projects';
 });
 
 it('lists only the authenticated user projects', function () {
@@ -24,14 +24,14 @@ it('lists only the authenticated user projects', function () {
 it('creates a project', function () {
     $this->withToken($this->token)
         ->postJson($this->endpoint, [
-            'name'        => 'New Project',
+            'name' => 'New Project',
             'description' => 'Desc',
         ])
         ->assertCreated()
         ->assertJsonPath('data.name', 'New Project');
 
     $this->assertDatabaseHas('projects', [
-        'name'    => 'New Project',
+        'name' => 'New Project',
         'user_id' => $this->user->id,
     ]);
 });
@@ -90,7 +90,7 @@ it('deletes own project (soft delete)', function () {
 });
 
 it('requires authentication', function () {
-    auth('api')->logout(); 
-    
+    auth('api')->logout();
+
     $this->getJson($this->endpoint)->assertUnauthorized();
 });

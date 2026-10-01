@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Auth\AuthenticationException;
 
 beforeEach(function () {
     $this->endpoint = '/api/auth';
@@ -8,8 +9,8 @@ beforeEach(function () {
 
 it('registers a new user and returns a token', function () {
     $response = $this->postJson("{$this->endpoint}/register", [
-        'name'     => 'Test User',
-        'email'    => 'test@example.com',
+        'name' => 'Test User',
+        'email' => 'test@example.com',
         'password' => 'secret123',
     ]);
 
@@ -24,12 +25,12 @@ it('rejects registration with duplicate email', function () {
     User::factory()->create(['email' => 'test@example.com']);
 
     $this->postJson("{$this->endpoint}/register", [
-        'name'     => 'Test User',
-        'email'    => 'test@example.com',
+        'name' => 'Test User',
+        'email' => 'test@example.com',
         'password' => 'secret123',
     ])->assertUnprocessable()
-      ->assertJsonPath('code', 'VALIDATION_ERROR')
-      ->assertJsonValidationErrors('email');
+        ->assertJsonPath('code', 'VALIDATION_ERROR')
+        ->assertJsonValidationErrors('email');
 });
 
 it('validates required fields on registration', function () {
@@ -40,26 +41,26 @@ it('validates required fields on registration', function () {
 
 it('logs in with valid credentials', function () {
     User::factory()->create([
-        'email'    => 'test@example.com',
+        'email' => 'test@example.com',
         'password' => 'secret123',
     ]);
 
     $this->postJson("{$this->endpoint}/login", [
-        'email'    => 'test@example.com',
+        'email' => 'test@example.com',
         'password' => 'secret123',
     ])->assertOk()
-      ->assertJsonPath('success', true)
-      ->assertJsonStructure(['data' => ['token' => ['access_token']]]);
+        ->assertJsonPath('success', true)
+        ->assertJsonStructure(['data' => ['token' => ['access_token']]]);
 });
 
 it('fails login with wrong credentials', function () {
     User::factory()->create(['email' => 'test@example.com']);
 
     $this->postJson("{$this->endpoint}/login", [
-        'email'    => 'test@example.com',
+        'email' => 'test@example.com',
         'password' => 'wrong-password',
     ])->assertUnauthorized()
-      ->assertJsonPath('code', 'UNAUTHENTICATED');
+        ->assertJsonPath('code', 'UNAUTHENTICATED');
 });
 
 it('requires authentication to access /me', function () {
@@ -69,7 +70,7 @@ it('requires authentication to access /me', function () {
 });
 
 it('returns authenticated user on /me', function () {
-    $user  = User::factory()->create();
+    $user = User::factory()->create();
     $token = auth('api')->login($user);
 
     $this->withToken($token)
@@ -79,7 +80,7 @@ it('returns authenticated user on /me', function () {
 });
 
 it('refreshes a valid token', function () {
-    $user  = User::factory()->create();
+    $user = User::factory()->create();
     $token = auth('api')->login($user);
 
     $this->withToken($token)
@@ -89,7 +90,7 @@ it('refreshes a valid token', function () {
 });
 
 it('logs out and invalidates the token', function () {
-    $user  = User::factory()->create();
+    $user = User::factory()->create();
     $token = auth('api')->login($user);
 
     $this->withToken($token)->postJson("{$this->endpoint}/logout")->assertOk();
@@ -98,5 +99,5 @@ it('logs out and invalidates the token', function () {
     auth('api')->setToken($token);
 
     expect(fn () => auth('api')->authenticate())
-        ->toThrow(\Illuminate\Auth\AuthenticationException::class);
+        ->toThrow(AuthenticationException::class);
 });
