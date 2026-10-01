@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -14,7 +13,7 @@ class TaskService
     {
         return Task::query()
             ->whereHas('project', fn ($q) => $q->where('user_id', $user->id))
-            ->with('project') 
+            ->with('project')
             ->filter($filters)
             ->when(
                 ! empty($filters['project_id']),

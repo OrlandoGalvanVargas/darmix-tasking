@@ -17,8 +17,8 @@ class IndexTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status'     => ['nullable', Rule::enum(TaskStatus::class)],
-            'priority'   => ['nullable', Rule::enum(TaskPriority::class)],
+            'status' => ['nullable', Rule::enum(TaskStatus::class)],
+            'priority' => ['nullable', Rule::enum(TaskPriority::class)],
             'project_id' => [
                 'nullable',
                 'integer',
@@ -26,9 +26,9 @@ class IndexTaskRequest extends FormRequest
                     ->where('user_id', $this->user()->id)
                     ->whereNull('deleted_at'),
             ],
-            'search'   => ['nullable', 'string', 'max:255'],
+            'search' => ['nullable', 'string', 'max:255'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
-            'page'     => ['nullable', 'integer', 'min:1'],
+            'page' => ['nullable', 'integer', 'min:1'],
         ];
     }
 }

@@ -22,7 +22,7 @@ class AuthController extends Controller
         $result = $this->auth->register($request->validated());
 
         return ApiResponse::created([
-            'user'  => new UserResource($result['user']),
+            'user' => new UserResource($result['user']),
             'token' => $this->auth->tokenData($result['token']),
         ], 'Usuario registrado correctamente.');
     }
@@ -32,7 +32,7 @@ class AuthController extends Controller
         $result = $this->auth->login($request->validated());
 
         return ApiResponse::success([
-            'user'  => new UserResource($result['user']),
+            'user' => new UserResource($result['user']),
             'token' => $this->auth->tokenData($result['token']),
         ], 'Inicio de sesión exitoso.');
     }

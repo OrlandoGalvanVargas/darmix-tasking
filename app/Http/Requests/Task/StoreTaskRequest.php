@@ -31,11 +31,11 @@ class StoreTaskRequest extends FormRequest
                     ->where('user_id', $this->user()->id)
                     ->whereNull('deleted_at'),
             ],
-            'title'       => ['required', 'string', 'min:2', 'max:255'],
+            'title' => ['required', 'string', 'min:2', 'max:255'],
             'description' => ['nullable', 'string', 'max:5000'],
-            'status'      => ['nullable', Rule::enum(TaskStatus::class)],
-            'priority'    => ['nullable', Rule::enum(TaskPriority::class)],
-            'due_date'    => ['nullable', 'date', 'after_or_equal:today'],
+            'status' => ['nullable', Rule::enum(TaskStatus::class)],
+            'priority' => ['nullable', Rule::enum(TaskPriority::class)],
+            'due_date' => ['nullable', 'date', 'after_or_equal:today'],
         ];
     }
 

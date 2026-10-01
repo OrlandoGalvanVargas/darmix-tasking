@@ -50,7 +50,7 @@ class TaskController extends Controller
     {
         $this->authorize('view', $task);
 
-        $task->load('project:id,name,description'); 
+        $task->load('project:id,name,description');
 
         return ApiResponse::success(
             new TaskResource($task),
