@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Task;
-use App\Models\Project; 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaskFactory extends Factory

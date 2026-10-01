@@ -4,25 +4,25 @@ namespace App\Enums;
 
 enum TaskStatus: string
 {
-    case Pending    = 'pending';
+    case Pending = 'pending';
     case InProgress = 'in_progress';
-    case Completed  = 'completed';
+    case Completed = 'completed';
 
     public function label(): string
     {
         return match ($this) {
-            self::Pending    => 'Pendiente',
+            self::Pending => 'Pendiente',
             self::InProgress => 'En progreso',
-            self::Completed  => 'Completada',
+            self::Completed => 'Completada',
         };
     }
 
     public function color(): string
     {
         return match ($this) {
-            self::Pending    => 'gray',
+            self::Pending => 'gray',
             self::InProgress => 'blue',
-            self::Completed  => 'green',
+            self::Completed => 'green',
         };
     }
 

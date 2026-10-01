@@ -23,16 +23,16 @@ class Task extends Model
     ];
 
     protected $attributes = [
-        'status'   => 'pending',
+        'status' => 'pending',
         'priority' => 'medium',
     ];
 
     protected function casts(): array
     {
         return [
-            'status'     => TaskStatus::class,
-            'priority'   => TaskPriority::class,
-            'due_date'   => 'date',
+            'status' => TaskStatus::class,
+            'priority' => TaskPriority::class,
+            'due_date' => 'date',
             'deleted_at' => 'datetime',
         ];
     }
@@ -61,9 +61,9 @@ class Task extends Model
             ->when(
                 ! empty($filters['search']),
                 fn (Builder $q) => $q->where(function (Builder $q) use ($filters) {
-                    $term = '%' . $filters['search'] . '%';
+                    $term = '%'.$filters['search'].'%';
                     $q->where('title', 'like', $term)
-                      ->orWhere('description', 'like', $term);
+                        ->orWhere('description', 'like', $term);
                 })
             );
     }
@@ -71,6 +71,6 @@ class Task extends Model
     public function scopeOverdue(Builder $query): Builder
     {
         return $query->where('due_date', '<', now()->startOfDay())
-                     ->where('status', '!=', TaskStatus::Completed->value);
+            ->where('status', '!=', TaskStatus::Completed->value);
     }
 }

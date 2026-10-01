@@ -44,9 +44,9 @@ class Project extends Model
     {
         return $query->withCount([
             'tasks',
-            'tasks as pending_tasks_count'     => fn ($q) => $q->where('status', 'pending'),
+            'tasks as pending_tasks_count' => fn ($q) => $q->where('status', 'pending'),
             'tasks as in_progress_tasks_count' => fn ($q) => $q->where('status', 'in_progress'),
-            'tasks as completed_tasks_count'   => fn ($q) => $q->where('status', 'completed'),
+            'tasks as completed_tasks_count' => fn ($q) => $q->where('status', 'completed'),
         ]);
     }
 }
