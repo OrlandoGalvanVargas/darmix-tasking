@@ -225,7 +225,7 @@ Respuesta esperada:
 
 ```json
 {
-  "status": "ok"
+  "success": true
 }
 ```
 
