@@ -2,33 +2,37 @@
 
 namespace App\Enums;
 
-enum TaskStatus: string
+enum TaskPriority: string
 {
-    case Pending    = 'pending';
-    case InProgress = 'in_progress';
-    case Completed  = 'completed';
+    case Low    = 'low';
+    case Medium = 'medium';
+    case High   = 'high';
 
     public function label(): string
     {
         return match ($this) {
-            self::Pending    => 'Pendiente',
-            self::InProgress => 'En progreso',
-            self::Completed  => 'Completada',
+            self::Low    => 'Baja',
+            self::Medium => 'Media',
+            self::High   => 'Alta',
         };
     }
 
     public function color(): string
     {
         return match ($this) {
-            self::Pending    => 'gray',
-            self::InProgress => 'blue',
-            self::Completed  => 'green',
+            self::Low    => 'green',
+            self::Medium => 'yellow',
+            self::High   => 'red',
         };
     }
 
-    public function isFinal(): bool
+    public function weight(): int
     {
-        return $this === self::Completed;
+        return match ($this) {
+            self::Low    => 1,
+            self::Medium => 2,
+            self::High   => 3,
+        };
     }
 
     public static function values(): array
