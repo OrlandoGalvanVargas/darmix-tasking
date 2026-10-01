@@ -147,7 +147,7 @@ Respuesta esperada:
 
 ```json
 {
-  "status": "ok"
+  "success": true
 }
 ```
 
@@ -225,7 +225,7 @@ Respuesta esperada:
 
 ```json
 {
-  "status": "ok"
+  "success": true
 }
 ```
 
