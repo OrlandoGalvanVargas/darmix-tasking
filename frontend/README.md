@@ -1,6 +1,7 @@
 <div align="center">
 
 # Task Manager (Frontend)
+[🌐 Ver Demo Online](https://grupo-balak-task-manager.pages.dev/)
 
 SPA en React 19 y TypeScript que consume la API RESTful del backend Laravel.
 
