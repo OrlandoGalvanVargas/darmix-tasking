@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/logo.svg" alt="Task Manager" width="96" height="96">
+<img src="docs/assets/logo.png" alt="Task Manager" width="96" height="96">
 
 # Task Manager
 
@@ -175,12 +175,12 @@ http://localhost:3000
 
 ## Servicios y puertos
 
-| Servicio | Contenedor | Descripción | Acceso desde el equipo |
-| --- | --- | --- | --- |
-| `frontend` | `task_manager_frontend` | Nginx con el SPA de React y proxy hacia `/api` | `http://localhost:3000` |
-| `backend-web` | `task_manager_backend_web` | Nginx del backend (entrada a Laravel) | `http://localhost:8000/api` |
-| `app` | `task_manager_backend_app` | PHP-FPM con Laravel 12 | Solo red interna |
-| `backend-db` | `task_manager_backend_db` | MySQL 8 | `localhost:3307` |
+| Servicio      | Contenedor                 | Descripción                                    | Acceso desde el equipo      |
+| ------------- | -------------------------- | ---------------------------------------------- | --------------------------- |
+| `frontend`    | `task_manager_frontend`    | Nginx con el SPA de React y proxy hacia `/api` | `http://localhost:3000`     |
+| `backend-web` | `task_manager_backend_web` | Nginx del backend (entrada a Laravel)          | `http://localhost:8000/api` |
+| `app`         | `task_manager_backend_app` | PHP-FPM con Laravel 12                         | Solo red interna            |
+| `backend-db`  | `task_manager_backend_db`  | MySQL 8                                        | `localhost:3307`            |
 
 El puerto de MySQL es **3307** (y no 3306) para no chocar con un MySQL o XAMPP instalado en el equipo. Para conectarte con un cliente como DBeaver o phpMyAdmin usa el host `127.0.0.1`, el puerto `3307` y las credenciales del archivo `.env` (por defecto `root` / `root`). Esas credenciales son solo para desarrollo.
 
@@ -196,10 +196,10 @@ http://localhost:3000/api/ping
 
 Cada parte puede ejecutarse directamente en tu equipo. Las instrucciones completas están en cada README:
 
-| Parte | Requisitos | Guía |
-| --- | --- | --- |
-| Backend | PHP 8.2+, Composer 2, MySQL/MariaDB (por ejemplo, XAMPP) | [Instalación local del backend](backend/README.md#instalación-local-xampp--mysql) |
-| Frontend | Node.js 20.19+ o 22.12+ | [Instalación local del frontend](frontend/README.md#instalación-local) |
+| Parte    | Requisitos                                               | Guía                                                                              |
+| -------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Backend  | PHP 8.2+, Composer 2, MySQL/MariaDB (por ejemplo, XAMPP) | [Instalación local del backend](backend/README.md#instalación-local-xampp--mysql) |
+| Frontend | Node.js 20.19+ o 22.12+                                  | [Instalación local del frontend](frontend/README.md#instalación-local)            |
 
 Combinaciones recomendadas: **ambos en Docker** (esta guía) o **ambos locales**. Un frontend local también funciona contra el backend en Docker, porque la API se publica en el puerto 8000. Si el frontend no encuentra el backend, entra en modo demo (ver el [README del frontend](frontend/README.md#modos-de-operación)).
 
@@ -209,20 +209,20 @@ Combinaciones recomendadas: **ambos en Docker** (esta guía) o **ambos locales**
 
 El seeder crea dos usuarios, también disponibles en el modo demo del frontend:
 
-| Usuario | Email | Contraseña | Descripción |
-| --- | --- | --- | --- |
-| Usuario Demo | `demo@grupobalak.test` | `password123` | Usuario principal con proyectos y tareas de ejemplo |
+| Usuario      | Email                  | Contraseña    | Descripción                                                      |
+| ------------ | ---------------------- | ------------- | ---------------------------------------------------------------- |
+| Usuario Demo | `demo@grupobalak.test` | `password123` | Usuario principal con proyectos y tareas de ejemplo              |
 | Otro Usuario | `otro@grupobalak.test` | `password123` | Usuario secundario, para comprobar el aislamiento entre usuarios |
 
 ---
 
 ## Variables de entorno
 
-| Archivo | Uso | Contenido |
-| --- | --- | --- |
-| `.env` (raíz, opcional) | Credenciales de MySQL para Docker Compose | `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` |
-| `backend/.env` | Configuración de Laravel (clave de la app, JWT, caché) | Ver [variables del backend](backend/README.md#variables-de-entorno) |
-| `frontend/.env` | Configuración del frontend en desarrollo local | Ver [variables del frontend](frontend/README.md#variables-de-entorno) |
+| Archivo                 | Uso                                                    | Contenido                                                             |
+| ----------------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| `.env` (raíz, opcional) | Credenciales de MySQL para Docker Compose              | `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`                           |
+| `backend/.env`          | Configuración de Laravel (clave de la app, JWT, caché) | Ver [variables del backend](backend/README.md#variables-de-entorno)   |
+| `frontend/.env`         | Configuración del frontend en desarrollo local         | Ver [variables del frontend](frontend/README.md#variables-de-entorno) |
 
 Con Docker, `docker-compose.yml` sobrescribe la conexión a la base de datos del contenedor `app` (`DB_HOST=backend-db`), por lo que el valor de `DB_HOST` en `backend/.env` no se utiliza. El frontend en Docker se compila con `VITE_API_URL=/api`, de modo que usa el proxy de Nginx; si cambias esa variable, reconstruye con `docker compose up -d --build`.
 
@@ -306,40 +306,40 @@ Más detalles en [Tests del backend](backend/README.md#tests) y [Tests del front
 
 ## Solución de problemas
 
-| Síntoma | Causa probable | Solución |
-| --- | --- | --- |
-| El frontend muestra el banner **DEMO** aunque el backend está encendido | El modo se decide al cargar la página; el backend aún no estaba listo | Espera unos segundos, comprueba `http://localhost:8000/api/ping` y recarga con `Ctrl + F5` |
-| `502 Bad Gateway` o error 500 justo después de levantar | El backend aún no tiene dependencias o clave de aplicación | Completa los pasos 7 y 8 y espera unos segundos |
-| `Connection refused` o `SQLSTATE[HY000] [2002]` al migrar | MySQL todavía se está inicializando | Espera 10 a 15 segundos (confirma con `docker compose logs backend-db`) y repite el comando |
-| `Duplicate entry` al ejecutar los seeders | Se ejecutó `db:seed` sobre datos que ya existen en el volumen | Usa `migrate:fresh --seed` (recrea las tablas antes de poblarlas) |
-| `No application encryption key has been specified` | Falta el `.env` del backend o la clave | Ejecuta los pasos 3 y 8 |
-| `port is already allocated` (3000, 8000 o 3307) | Otro programa usa ese puerto | Detén ese programa o cambia el puerto izquierdo en `docker-compose.yml` (por ejemplo, `"8080:80"`) |
-| Tras ejecutar los tests ya no hay datos de ejemplo | Los tests recrearon las tablas | Ejecuta `docker compose exec app php artisan migrate:fresh --seed` |
-| Los cambios del frontend no se ven en `localhost:3000` | La imagen del frontend es una compilación estática | Reconstruye con `docker compose up -d --build frontend` |
+| Síntoma                                                                 | Causa probable                                                        | Solución                                                                                           |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| El frontend muestra el banner **DEMO** aunque el backend está encendido | El modo se decide al cargar la página; el backend aún no estaba listo | Espera unos segundos, comprueba `http://localhost:8000/api/ping` y recarga con `Ctrl + F5`         |
+| `502 Bad Gateway` o error 500 justo después de levantar                 | El backend aún no tiene dependencias o clave de aplicación            | Completa los pasos 7 y 8 y espera unos segundos                                                    |
+| `Connection refused` o `SQLSTATE[HY000] [2002]` al migrar               | MySQL todavía se está inicializando                                   | Espera 10 a 15 segundos (confirma con `docker compose logs backend-db`) y repite el comando        |
+| `Duplicate entry` al ejecutar los seeders                               | Se ejecutó `db:seed` sobre datos que ya existen en el volumen         | Usa `migrate:fresh --seed` (recrea las tablas antes de poblarlas)                                  |
+| `No application encryption key has been specified`                      | Falta el `.env` del backend o la clave                                | Ejecuta los pasos 3 y 8                                                                            |
+| `port is already allocated` (3000, 8000 o 3307)                         | Otro programa usa ese puerto                                          | Detén ese programa o cambia el puerto izquierdo en `docker-compose.yml` (por ejemplo, `"8080:80"`) |
+| Tras ejecutar los tests ya no hay datos de ejemplo                      | Los tests recrearon las tablas                                        | Ejecuta `docker compose exec app php artisan migrate:fresh --seed`                                 |
+| Los cambios del frontend no se ven en `localhost:3000`                  | La imagen del frontend es una compilación estática                    | Reconstruye con `docker compose up -d --build frontend`                                            |
 
 ---
 
 ## Cobertura de requisitos
 
-| Requisito | Dónde verlo |
-| --- | --- |
-| Migraciones y relaciones (`users`, `projects`, `tasks`) | [Backend: arquitectura](backend/README.md#arquitectura) |
-| Autenticación JWT: registro, login, logout y refresh | [Backend: autenticación](backend/README.md#autenticación) |
-| Rutas de proyectos y tareas protegidas y asociadas al usuario | [Backend: endpoints](backend/README.md#endpoints) |
-| CRUD de `/api/projects` y `/api/tasks` | [Backend: endpoints](backend/README.md#endpoints) |
-| Form Requests, API Resources y códigos HTTP | [Backend: formato de respuestas](backend/README.md#formato-de-respuestas-y-errores) |
-| Filtros por `status` y `priority` | [Backend: endpoints](backend/README.md#endpoints) |
-| Eager loading (`with()`) para evitar N+1 | [Backend: decisiones técnicas](backend/README.md#decisiones-técnicas) |
-| Pantalla de login y registro | [Frontend: cobertura](frontend/README.md#cobertura-de-requisitos) |
-| Proyectos, tareas, CRUD, cambio de estado y filtros | [Frontend: cobertura](frontend/README.md#cobertura-de-requisitos) |
-| Hooks, componentes reutilizables y organización de carpetas | [Frontend: estructura](frontend/README.md#estructura-del-proyecto) |
-| Estados de carga, vacío y error | [Frontend: sistema de diseño](frontend/README.md#sistema-de-diseño) |
-| Interfaz responsive con Tailwind CSS | [Frontend: sistema de diseño](frontend/README.md#sistema-de-diseño) |
-| **Extra:** tests en Laravel (Pest) | [Backend: tests](backend/README.md#tests) |
-| **Extra:** tests en frontend (Vitest) | [Frontend: tests](frontend/README.md#tests) |
-| **Extra:** paginación en el listado de tareas | [Frontend: consumo de la API](frontend/README.md#consumo-de-la-api) |
-| README, variables de entorno, migraciones y seed | Este documento y los README de cada parte |
-| Credenciales de prueba | [Credenciales de prueba](#credenciales-de-prueba) |
+| Requisito                                                     | Dónde verlo                                                                         |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Migraciones y relaciones (`users`, `projects`, `tasks`)       | [Backend: arquitectura](backend/README.md#arquitectura)                             |
+| Autenticación JWT: registro, login, logout y refresh          | [Backend: autenticación](backend/README.md#autenticación)                           |
+| Rutas de proyectos y tareas protegidas y asociadas al usuario | [Backend: endpoints](backend/README.md#endpoints)                                   |
+| CRUD de `/api/projects` y `/api/tasks`                        | [Backend: endpoints](backend/README.md#endpoints)                                   |
+| Form Requests, API Resources y códigos HTTP                   | [Backend: formato de respuestas](backend/README.md#formato-de-respuestas-y-errores) |
+| Filtros por `status` y `priority`                             | [Backend: endpoints](backend/README.md#endpoints)                                   |
+| Eager loading (`with()`) para evitar N+1                      | [Backend: decisiones técnicas](backend/README.md#decisiones-técnicas)               |
+| Pantalla de login y registro                                  | [Frontend: cobertura](frontend/README.md#cobertura-de-requisitos)                   |
+| Proyectos, tareas, CRUD, cambio de estado y filtros           | [Frontend: cobertura](frontend/README.md#cobertura-de-requisitos)                   |
+| Hooks, componentes reutilizables y organización de carpetas   | [Frontend: estructura](frontend/README.md#estructura-del-proyecto)                  |
+| Estados de carga, vacío y error                               | [Frontend: sistema de diseño](frontend/README.md#sistema-de-diseño)                 |
+| Interfaz responsive con Tailwind CSS                          | [Frontend: sistema de diseño](frontend/README.md#sistema-de-diseño)                 |
+| **Extra:** tests en Laravel (Pest)                            | [Backend: tests](backend/README.md#tests)                                           |
+| **Extra:** tests en frontend (Vitest)                         | [Frontend: tests](frontend/README.md#tests)                                         |
+| **Extra:** paginación en el listado de tareas                 | [Frontend: consumo de la API](frontend/README.md#consumo-de-la-api)                 |
+| README, variables de entorno, migraciones y seed              | Este documento y los README de cada parte                                           |
+| Credenciales de prueba                                        | [Credenciales de prueba](#credenciales-de-prueba)                                   |
 
 ---
 
