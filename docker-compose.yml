@@ -1,0 +1,69 @@
+services:
+  # --- BACKEND SERVICES ---
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: task_manager_backend_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      DB_HOST: backend-db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-task_manager}
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-root}
+    networks:
+      - task_manager_net
+
+  backend-web:
+    image: nginx:alpine
+    container_name: task_manager_backend_web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - task_manager_net
+
+  backend-db:
+    image: mysql:8.0
+    container_name: task_manager_backend_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-task_manager}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - task_manager_net
+
+  # --- FRONTEND SERVICE ---
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: task_manager_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-web
+    networks:
+      - task_manager_net
+
+networks:
+  task_manager_net:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
