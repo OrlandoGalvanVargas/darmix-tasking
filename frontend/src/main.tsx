@@ -1,10 +1,21 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "@fontsource-variable/inter";
+import "./index.css";
+import App from "./App.tsx";
+import { AppProviders } from "./app/providers.tsx";
+import { bootstrap } from "./app/bootstrap.ts";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+bootstrap()
+  .catch((err) => {
+    console.error("Error en bootstrap:", err);
+  })
+  .finally(() => {
+    createRoot(document.getElementById("root")!).render(
+      <StrictMode>
+        <AppProviders>
+          <App />
+        </AppProviders>
+      </StrictMode>,
+    );
+  });

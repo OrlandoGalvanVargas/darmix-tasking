@@ -1,5 +1,9 @@
+import { RouterProvider } from "react-router";
+import { router } from "@/app/router";
+import { useCurrentUserQuery } from "@/hooks/useAuthMutations";
+
 export default function App() {
-  return (
-    <h1 className="p-8 text-3xl font-bold text-indigo-600">Task Manager</h1>
-  );
+  useCurrentUserQuery();
+
+  return <RouterProvider router={router} />;
 }
