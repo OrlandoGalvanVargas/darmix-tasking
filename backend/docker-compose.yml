@@ -30,6 +30,7 @@ services:
       - app
     networks:
       - backend_net
+      - shared_net
 
   db:
     image: mysql:8.0
@@ -48,6 +49,9 @@ services:
 networks:
   backend_net:
     driver: bridge
+  shared_net:
+    name: task_manager_net
+    external: true
 
 volumes:
   db_data:
