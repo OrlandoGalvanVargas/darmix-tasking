@@ -35,13 +35,20 @@ const priorityOptions = [
 
 export function TaskFilters({ value, onChange, onCreate }: TaskFiltersProps) {
   const [search, setSearch] = useState(value.search);
+  const [prevPropSearch, setPrevPropSearch] = useState(value.search);
+
+  if (value.search !== prevPropSearch) {
+    setPrevPropSearch(value.search);
+    setSearch(value.search);
+  }
+
   const debouncedSearch = useDebounce(search, 350);
 
   useEffect(() => {
     if (debouncedSearch !== value.search) {
       onChange({ ...value, search: debouncedSearch });
     }
-  }, [debouncedSearch]);
+  }, [debouncedSearch, value, onChange]);
 
   const hasFilters = Boolean(value.status || value.priority || value.search);
 

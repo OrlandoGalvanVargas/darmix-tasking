@@ -13,7 +13,9 @@ function getSystemTheme(): ResolvedTheme {
 
 function applyTheme(theme: Theme): ResolvedTheme {
   const resolved: ResolvedTheme = theme === "system" ? getSystemTheme() : theme;
-  document.documentElement.classList.toggle("dark", resolved === "dark");
+  if (typeof window !== "undefined") {
+    document.documentElement.classList.toggle("dark", resolved === "dark");
+  }
   return resolved;
 }
 
@@ -26,18 +28,19 @@ export function useTheme() {
     return "system";
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
-    applyTheme(theme),
-  );
+  const resolvedTheme = theme === "system" ? getSystemTheme() : theme;
 
   useEffect(() => {
-    const resolved = applyTheme(theme);
-    setResolvedTheme(resolved);
+    applyTheme(theme);
 
     if (theme !== "system") return;
 
     const mql = window.matchMedia(MEDIA_QUERY);
-    const handler = () => setResolvedTheme(applyTheme("system"));
+    const handler = () => {
+      applyTheme("system");
+      setThemeState((prev) => (prev === "system" ? "system" : prev));
+    };
+
     mql.addEventListener("change", handler);
     return () => mql.removeEventListener("change", handler);
   }, [theme]);
