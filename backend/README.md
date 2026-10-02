@@ -177,39 +177,20 @@ cd grupo-balak-task-manager
 cd backend
 ```
 
-**4. Crear el archivo de entorno:**
-
-```bash
-cp .env.example .env
-```
-
-**5. Construir y levantar los contenedores:**
+**4. Construir y levantar los contenedores:**
 
 ```bash
 docker-compose up -d --build
 ```
+> **Nota:** La primera vez, la construcción de las imágenes y la configuración del backend tardarán unos minutos. El contenedor se encargará automáticamente de crear el archivo `.env`, generar las llaves de seguridad y ejecutar las migraciones de la base de datos.
 
-**6. Esperar a que MySQL se inicialice.** La primera vez tarda entre 10 y 15 segundos; espera antes de continuar con el siguiente paso.
-
-**7. Instalar las dependencias dentro del contenedor:**
-
-```bash
-docker-compose exec app composer install
-```
-
-**8. Generar la clave de la aplicación:**
+**5. Comprobar que todos los servicios están en ejecución:**
 
 ```bash
-docker-compose exec app php artisan key:generate
+docker compose ps
 ```
 
-**9. Ejecutar las migraciones y los seeders:**
-
-```bash
-docker-compose exec app php artisan migrate:fresh --seed
-```
-
-**10. Verificar que la API responde:**
+**6. Verificar que la API responde:**
 
 ```text
 http://localhost:8000/api/ping
