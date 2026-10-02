@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 if [ ! -f /var/www/html/.env ]; then
