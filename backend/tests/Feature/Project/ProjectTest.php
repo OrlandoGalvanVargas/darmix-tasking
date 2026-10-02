@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 
 beforeEach(function () {
@@ -93,4 +94,19 @@ it('requires authentication', function () {
     auth('api')->logout();
 
     $this->getJson($this->endpoint)->assertUnauthorized();
+});
+
+it('includes tasks summary broken down by status', function () {
+    $project = Project::factory()->for($this->user)->create();
+
+    Task::factory(2)->for($project)->create(['status' => 'pending']);
+    Task::factory(1)->for($project)->create(['status' => 'in_progress']);
+    Task::factory(3)->for($project)->create(['status' => 'completed']);
+
+    $this->withToken($this->token)
+        ->getJson("{$this->endpoint}/{$project->id}")
+        ->assertOk()
+        ->assertJsonPath('data.tasks_summary.pending', 2)
+        ->assertJsonPath('data.tasks_summary.in_progress', 1)
+        ->assertJsonPath('data.tasks_summary.completed', 3);
 });

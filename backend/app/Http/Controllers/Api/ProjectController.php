@@ -50,8 +50,7 @@ class ProjectController extends Controller
     {
         $this->authorize('view', $project);
 
-        $project->loadCount('tasks')
-            ->load(['tasks' => fn ($q) => $q->orderByDesc('created_at')]);
+        $project = $this->service->loadDetails($project);
 
         return ApiResponse::success(
             new ProjectResource($project),

@@ -16,6 +16,18 @@ class ProjectService
             ->paginate($filters['per_page'] ?? 15);
     }
 
+    public function loadDetails(Project $project): Project
+    {
+        return $project
+            ->loadCount([
+                'tasks',
+                'tasks as pending_tasks_count' => fn ($q) => $q->where('status', 'pending'),
+                'tasks as in_progress_tasks_count' => fn ($q) => $q->where('status', 'in_progress'),
+                'tasks as completed_tasks_count' => fn ($q) => $q->where('status', 'completed'),
+            ])
+            ->load(['tasks' => fn ($q) => $q->orderByDesc('created_at')]);
+    }
+
     public function create(User $user, array $data): Project
     {
         return $user->projects()->create($data);
