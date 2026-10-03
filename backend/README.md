@@ -1,6 +1,6 @@
 <div align="center">
 
-# Task Manager API
+# Darmix Tasking API
 
 API RESTful para la gestión de proyectos y tareas, construida con Laravel 12 y autenticación JWT.
 

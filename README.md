@@ -16,7 +16,7 @@ Aplicación web para gestionar proyectos y tareas: API RESTful con **Laravel 12*
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Tests](https://img.shields.io/badge/Tests-Pest%20%7C%20Vitest-F472B6?style=flat-square)
 
-[Backend](backend/README.md) · [Frontend](frontend/README.md) · [🌐 Ver Demo Online](https://grupo-balak-task-manager.pages.dev/) · [Inicio rápido](#inicio-rápido-con-docker)
+[Backend](backend/README.md) · [Frontend](frontend/README.md) · [🌐 Ver Demo Online](https://darmix-tasking.pages.dev/) · [Inicio rápido](#inicio-rápido-con-docker)
 
 <br>
 
