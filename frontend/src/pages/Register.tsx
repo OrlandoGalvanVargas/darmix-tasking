@@ -5,9 +5,18 @@ import { Link, useNavigate } from "react-router";
 import { registerSchema, type RegisterForm } from "@/schemas/auth";
 import { useRegisterMutation } from "@/hooks/useAuthMutations";
 import { Input } from "@/components/ui/Input";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Button } from "@/components/ui/Button";
+import {
+  MailIcon,
+  LockIcon,
+  UserIcon,
+  ArrowRightIcon,
+} from "@/components/ui/icons";
 import { ROUTES } from "@/constants/routes";
 import { ApiError } from "@/services/http/ApiError";
+import { getPasswordStrength } from "@/lib/passwordStrength";
+import { cn } from "@/lib/cn";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -18,6 +27,7 @@ export default function Register() {
     register,
     handleSubmit,
     setError,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -29,9 +39,11 @@ export default function Register() {
     },
   });
 
+  const passwordValue = watch("password");
+  const strength = getPasswordStrength(passwordValue);
+
   const onSubmit = async (values: RegisterForm) => {
     setRootError(null);
-
     try {
       await registerMutation.mutateAsync({
         name: values.name,
@@ -55,65 +67,105 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <Input
-        label="Nombre"
-        type="text"
-        autoComplete="name"
-        placeholder="Tu nombre"
-        error={errors.name?.message}
-        {...register("name")}
-      />
+    <div className="space-y-8">
+      <header className="space-y-2">
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+          Crea tu cuenta
+        </h1>
+        <p className="text-sm text-foreground-muted">
+          Empieza a organizar tus proyectos en segundos
+        </p>
+      </header>
 
-      <Input
-        label="Correo electrónico"
-        type="email"
-        autoComplete="email"
-        placeholder="tu@correo.com"
-        error={errors.email?.message}
-        {...register("email")}
-      />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+        <Input
+          label="Nombre"
+          type="text"
+          autoComplete="name"
+          placeholder="Tu nombre"
+          leftIcon={<UserIcon size={18} />}
+          error={errors.name?.message}
+          {...register("name")}
+        />
 
-      <Input
-        label="Contraseña"
-        type="password"
-        autoComplete="new-password"
-        placeholder="Mínimo 8 caracteres"
-        error={errors.password?.message}
-        {...register("password")}
-      />
+        <Input
+          label="Correo electrónico"
+          type="email"
+          autoComplete="email"
+          placeholder="tu@correo.com"
+          leftIcon={<MailIcon size={18} />}
+          error={errors.email?.message}
+          {...register("email")}
+        />
 
-      <Input
-        label="Confirmar contraseña"
-        type="password"
-        autoComplete="new-password"
-        placeholder="Repite tu contraseña"
-        error={errors.password_confirmation?.message}
-        {...register("password_confirmation")}
-      />
+        <div className="space-y-2">
+          <PasswordInput
+            label="Contraseña"
+            autoComplete="new-password"
+            placeholder="Mínimo 8 caracteres"
+            leftIcon={<LockIcon size={18} />}
+            error={errors.password?.message}
+            {...register("password")}
+          />
 
-      {rootError && (
-        <div
-          role="alert"
-          className="rounded-lg border border-danger/40 bg-danger-soft px-3 py-2 text-sm text-danger"
-        >
-          {rootError}
+          {/* Medidor de fuerza */}
+          {passwordValue && !errors.password && (
+            <div className="animate-fade-in space-y-1.5">
+              <div className="h-1 w-full overflow-hidden rounded-full bg-surface-muted">
+                <div
+                  className={cn(
+                    "h-full rounded-full transition-all duration-300",
+                    strength.color,
+                    strength.width,
+                  )}
+                />
+              </div>
+              <p className="text-[11px] font-medium text-foreground-muted">
+                Seguridad:{" "}
+                <span className="text-foreground">{strength.label}</span>
+              </p>
+            </div>
+          )}
         </div>
-      )}
 
-      <Button type="submit" fullWidth isLoading={isSubmitting}>
-        Crear cuenta
-      </Button>
+        <PasswordInput
+          label="Confirmar contraseña"
+          autoComplete="new-password"
+          placeholder="Repite tu contraseña"
+          leftIcon={<LockIcon size={18} />}
+          error={errors.password_confirmation?.message}
+          {...register("password_confirmation")}
+        />
+
+        {rootError && (
+          <div
+            role="alert"
+            className="animate-shake rounded-xl border border-danger/30 bg-danger-soft px-3.5 py-3 text-sm text-danger"
+          >
+            {rootError}
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          size="lg"
+          fullWidth
+          isLoading={isSubmitting}
+          rightIcon={<ArrowRightIcon size={18} />}
+        >
+          Crear cuenta
+        </Button>
+      </form>
 
       <p className="text-center text-sm text-foreground-muted">
         ¿Ya tienes cuenta?{" "}
         <Link
           to={ROUTES.login}
-          className="font-medium text-primary hover:underline"
+          className="font-semibold text-primary underline-offset-4 hover:underline"
         >
           Inicia sesión
         </Link>
       </p>
-    </form>
+    </div>
   );
 }

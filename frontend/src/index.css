@@ -1,68 +1,77 @@
 @import "tailwindcss";
-
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   color-scheme: light;
+  --font-sans:
+    "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
 
-  --background: #fafaf9;
+  /* Superficies - Blancos cálidos y pastel */
+  --background: #fdfcfb;
   --surface: #ffffff;
-  --surface-muted: #f5f5f4;
-  --border: #e7e5e4;
-  --foreground: #1c1917;
-  --foreground-muted: #78716c;
+  --surface-muted: #f5f3f0;
+  --border: #e8e4df;
+  --foreground: #2c2a28;
+  --foreground-muted: #7a7570;
 
-  --primary: #0f766e;
-  --primary-hover: #115e59;
+  /* Primario - Verde Salvia Profundo */
+  --primary: #4a7c6f;
+  --primary-hover: #3a6156;
   --primary-foreground: #ffffff;
-  --ring: #14b8a6;
+  --ring: #6b9c8f;
 
-  --accent: #ea580c;
-  --accent-hover: #c2410c;
-  --accent-soft: #ffedd5;
+  /* Acento - Terracota Suave */
+  --accent: #c97b5a;
+  --accent-hover: #b06445;
+  --accent-soft: #fdf0e8;
 
-  --info: #0369a1;
-  --info-soft: #e0f2fe;
-  --success: #15803d;
-  --success-soft: #dcfce7;
-  --warning: #a16207;
-  --warning-soft: #fef9c3;
-  --danger: #b91c1c;
-  --danger-soft: #fee2e2;
-  --danger-foreground: #ffffff;
+  /* Semánticos Pastel */
+  --info: #5a7fa8;
+  --info-soft: #eef4fa;
+  --success: #5a9e7a;
+  --success-soft: #edf7f1;
+  --warning: #d4a05a;
+  --warning-soft: #fef8ed;
+  --danger: #c25e5e;
+  --danger-soft: #fdeded;
 }
 
 .dark {
   color-scheme: dark;
-  --background: #0c0a09;
-  --surface: #1c1917;
-  --surface-muted: #292524;
-  --border: #44403c;
-  --foreground: #fafaf9;
-  --foreground-muted: #a8a29e;
+  /* Soft Dark Mode - Gris Pizarra Cálido */
+  --background: #1a1c22;
+  --surface: #242730;
+  --surface-muted: #2d303a;
+  --border: #3f434f;
+  --foreground: #e8e6e3;
+  --foreground-muted: #9d9a96;
 
-  --primary: #14b8a6;
-  --primary-hover: #2dd4bf;
-  --primary-foreground: #042f2e;
-  --ring: #2dd4bf;
+  /* Primario - Verde Salvia Luminoso */
+  --primary: #7bb8a5;
+  --primary-hover: #93cbb8;
+  --primary-foreground: #0d1815;
+  --ring: #93cbb8;
 
-  --accent: #fb923c;
-  --accent-hover: #fdba74;
-  --accent-soft: #431407;
+  /* Acento - Terracota Luminoso */
+  --accent: #e09a7a;
+  --accent-hover: #eeb89e;
+  --accent-soft: #2d1a12;
 
-  --info: #38bdf8;
-  --info-soft: #082f49;
-  --success: #4ade80;
-  --success-soft: #052e16;
-  --warning: #facc15;
-  --warning-soft: #422006;
-  --danger: #f87171;
-  --danger-soft: #450a0a;
-  --danger-foreground: #450a0a;
+  /* Semánticos Pastel (Dark) */
+  --info: #7ba7d4;
+  --info-soft: #0d1a26;
+  --success: #7bc49a;
+  --success-soft: #0d1f16;
+  --warning: #e8b86a;
+  --warning-soft: #26200d;
+  --danger: #e08484;
+  --danger-soft: #260d0d;
 }
 
 @theme inline {
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
 
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -88,22 +97,56 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
-  --color-danger-foreground: var(--danger-foreground);
 
-  --radius-card: 0.875rem;
+  --radius-card: 1.25rem;
+
+  --animate-fade-in-up: fade-in-up 0.4s ease-out both;
+  --animate-fade-in: fade-in 0.3s ease-out both;
+  --animate-shake: shake 0.35s ease-in-out;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 @layer base {
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
-
   h1,
   h2,
   h3 {
-    @apply tracking-tight;
+    @apply font-serif tracking-tight;
   }
-
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
   }
