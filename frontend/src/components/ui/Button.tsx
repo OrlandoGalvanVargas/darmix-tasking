@@ -16,19 +16,19 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANT_MAP: Record<Variant, string> = {
   primary:
-    "bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-ring",
+    "bg-primary text-primary-foreground shadow-sm hover:bg-primary-hover hover:shadow-md",
   secondary:
-    "bg-surface border border-border text-foreground hover:bg-surface-muted focus-visible:outline-ring",
+    "bg-surface border border-border text-foreground hover:bg-surface-muted hover:border-foreground-muted/30",
   ghost:
-    "bg-transparent text-foreground-muted hover:bg-surface-muted hover:text-foreground focus-visible:outline-ring",
+    "bg-transparent text-foreground-muted hover:bg-surface-muted hover:text-foreground",
   danger:
-    "bg-danger text-danger-foreground hover:opacity-90 focus-visible:outline-danger",
+    "bg-danger text-danger-foreground hover:opacity-90 shadow-sm hover:shadow-md",
 };
 
 const SIZE_MAP: Record<Size, string> = {
   sm: "h-8 px-3 text-sm gap-1.5",
   md: "h-10 px-4 text-sm gap-2",
-  lg: "h-12 px-6 text-base gap-2",
+  lg: "h-11 px-5 text-sm gap-2",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -54,9 +54,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled || isLoading}
         className={cn(
-          "inline-flex items-center justify-center rounded-lg font-medium transition",
-          "focus-visible:outline-2 focus-visible:outline-offset-2",
-          "disabled:cursor-not-allowed disabled:opacity-60",
+          "inline-flex items-center justify-center rounded-xl font-medium",
+          "transition-all duration-200 ease-out",
+          "active:scale-[0.98]",
+          "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/30",
+          "disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100",
           VARIANT_MAP[variant],
           SIZE_MAP[size],
           fullWidth && "w-full",
@@ -64,9 +66,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {...rest}
       >
-        {isLoading ? <Spinner size="sm" /> : leftIcon}
+        {isLoading ? (
+          <Spinner size="sm" />
+        ) : (
+          leftIcon && <span className="shrink-0">{leftIcon}</span>
+        )}
         {children}
-        {!isLoading && rightIcon}
+        {!isLoading && rightIcon && (
+          <span className="shrink-0">{rightIcon}</span>
+        )}
       </button>
     );
   },
