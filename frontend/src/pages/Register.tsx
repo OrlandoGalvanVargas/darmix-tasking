@@ -108,7 +108,7 @@ export default function Register() {
             {...register("password")}
           />
 
-          {/* Medidor de fuerza */}
+          {}
           {passwordValue && !errors.password && (
             <div className="animate-fade-in space-y-1.5">
               <div className="h-1 w-full overflow-hidden rounded-full bg-surface-muted">

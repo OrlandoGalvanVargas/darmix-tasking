@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { ROUTES } from "@/constants/routes";
 
 export function AppLayout() {
@@ -31,15 +32,20 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 border-b border-border bg-surface/80 backdrop-blur-sm">
+      <ScrollProgress />
+
+      <header className="sticky top-0 z-30 border-b border-border/70 bg-background/75 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4">
           <Link
             to={ROUTES.projects}
-            className="flex items-center gap-2.5 transition hover:opacity-80"
+            className="group flex items-center gap-2.5"
           >
-            <BrandMark size={30} className="text-primary" />
-            <span className="text-base font-semibold text-foreground">
-              Task Manager
+            <BrandMark
+              size={30}
+              className="text-primary transition-transform duration-500 ease-spring group-hover:-rotate-12 group-hover:scale-110"
+            />
+            <span className="font-soft hidden font-serif text-xl font-medium tracking-tight text-foreground sm:inline">
+              Darmix Tasking
             </span>
           </Link>
 
@@ -51,11 +57,11 @@ export function AppLayout() {
                 className="hidden items-center gap-2.5 rounded-full border border-border bg-surface py-1 pl-1 pr-3 sm:flex"
                 title={user.email}
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground ring-2 ring-accent/40 ring-offset-2 ring-offset-surface">
                   {initials}
                 </span>
                 <span className="text-sm font-medium text-foreground">
-                  {user.name}
+                  {user.name.split(" ")[0]}
                 </span>
               </div>
             )}
@@ -65,13 +71,13 @@ export function AppLayout() {
               size="sm"
               onClick={() => setConfirmOpen(true)}
             >
-              Cerrar sesión
+              Salir
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-8">
+      <main className="mx-auto max-w-5xl px-4 pb-24 pt-10 sm:pt-14">
         <Outlet />
       </main>
 

@@ -64,7 +64,7 @@ export default function Login() {
 
   return (
     <div className="space-y-8">
-      {/* Encabezado — visible en mobile y desktop */}
+      {}
       <header className="space-y-2">
         <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
           Bienvenido de nuevo
@@ -114,7 +114,7 @@ export default function Login() {
         </Button>
       </form>
 
-      {/* Hint de demo — suma puntos en portafolio */}
+      {}
       <button
         type="button"
         onClick={fillDemoCredentials}

@@ -6,14 +6,14 @@ import { SparklesIcon } from "@/components/ui/icons";
 export function AuthLayout() {
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-2">
-      {/* Panel de marca */}
+      {}
       <aside className="relative hidden overflow-hidden bg-primary lg:flex lg:flex-col lg:justify-between lg:p-12">
-        {/* Capa decorativa: gradiente radial */}
+        {}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_55%)]"
         />
-        {/* Capa decorativa: puntos */}
+        {}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.07]"
@@ -23,7 +23,7 @@ export function AuthLayout() {
             backgroundSize: "28px 28px",
           }}
         />
-        {/* Blob de color secundario */}
+        {}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-accent/25 blur-3xl"
@@ -60,7 +60,7 @@ export function AuthLayout() {
         </p>
       </aside>
 
-      {/* Panel del formulario */}
+      {}
       <div className="relative flex min-h-screen flex-col">
         <header className="flex items-center justify-between px-5 py-4 sm:px-8">
           <div className="flex items-center gap-2 lg:hidden">
