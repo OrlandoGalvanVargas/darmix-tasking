@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router";
 import { registerSchema, type RegisterForm } from "@/schemas/auth";
@@ -7,6 +7,8 @@ import { useRegisterMutation } from "@/hooks/useAuthMutations";
 import { Input } from "@/components/ui/Input";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Button } from "@/components/ui/Button";
+import { LeafGlyph } from "@/components/projects/GrowthBranch";
+import { fieldLevel, useAuthGrowth } from "@/components/layout/authGrowth";
 import {
   MailIcon,
   LockIcon,
@@ -27,7 +29,7 @@ export default function Register() {
     register,
     handleSubmit,
     setError,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -39,8 +41,25 @@ export default function Register() {
     },
   });
 
-  const passwordValue = watch("password");
+  const name = useWatch({ control, name: "name" }) ?? "";
+  const email = useWatch({ control, name: "email" }) ?? "";
+  const passwordValue = useWatch({ control, name: "password" }) ?? "";
+  const confirmation =
+    useWatch({ control, name: "password_confirmation" }) ?? "";
   const strength = getPasswordStrength(passwordValue);
+
+  const nameLevel = fieldLevel(name, name.trim().length >= 2);
+  const emailLevel = fieldLevel(email, /^\S+@\S+\.\S+$/.test(email));
+  const passwordLevel = fieldLevel(passwordValue, passwordValue.length >= 8);
+  const confirmationLevel = fieldLevel(
+    confirmation,
+    confirmation.length > 0 && confirmation === passwordValue,
+  );
+  const setLevels = useAuthGrowth()?.setLevels;
+
+  useEffect(() => {
+    setLevels?.([nameLevel, emailLevel, passwordLevel, confirmationLevel]);
+  }, [nameLevel, emailLevel, passwordLevel, confirmationLevel, setLevels]);
 
   const onSubmit = async (values: RegisterForm) => {
     setRootError(null);
@@ -69,7 +88,7 @@ export default function Register() {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+        <h1 className="font-soft text-4xl font-medium leading-[1.05] tracking-tight text-foreground sm:text-5xl">
           Crea tu cuenta
         </h1>
         <p className="text-sm text-foreground-muted">
@@ -110,17 +129,25 @@ export default function Register() {
 
           {}
           {passwordValue && !errors.password && (
-            <div className="animate-fade-in space-y-1.5">
-              <div className="h-1 w-full overflow-hidden rounded-full bg-surface-muted">
-                <div
-                  className={cn(
-                    "h-full rounded-full transition-all duration-300",
-                    strength.color,
-                    strength.width,
-                  )}
-                />
-              </div>
-              <p className="text-[11px] font-medium text-foreground-muted">
+            <div
+              className="animate-fade-in flex items-center gap-2.5"
+              aria-live="polite"
+            >
+              <span className="flex items-center gap-1" aria-hidden="true">
+                {[1, 2, 3].map((n) => {
+                  const filled = strength.level >= n;
+                  return (
+                    <span
+                      key={`${n}-${filled}`}
+                      className={cn("block", filled && "leaf-pop")}
+                      style={{ ["--delay" as string]: `${n * 40}ms` }}
+                    >
+                      <LeafGlyph kind={filled ? "done" : "todo"} size={16} />
+                    </span>
+                  );
+                })}
+              </span>
+              <p className="text-xs font-medium text-foreground-muted">
                 Seguridad:{" "}
                 <span className="text-foreground">{strength.label}</span>
               </p>
@@ -151,7 +178,13 @@ export default function Register() {
           size="lg"
           fullWidth
           isLoading={isSubmitting}
-          rightIcon={<ArrowRightIcon size={18} />}
+          className="group"
+          rightIcon={
+            <ArrowRightIcon
+              size={18}
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+            />
+          }
         >
           Crear cuenta
         </Button>

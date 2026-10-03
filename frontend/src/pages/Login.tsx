@@ -13,7 +13,7 @@ import { MailIcon, LockIcon, ArrowRightIcon } from "@/components/ui/icons";
 import { ROUTES } from "@/constants/routes";
 import { ApiError } from "@/services/http/ApiError";
 
-const DEMO_EMAIL = "demo@grupobalak.test";
+const DEMO_EMAIL = "demo@darmixista.test";
 const DEMO_PASSWORD = "password123";
 
 export default function Login() {

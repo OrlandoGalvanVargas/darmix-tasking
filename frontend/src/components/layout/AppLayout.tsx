@@ -38,13 +38,13 @@ export function AppLayout() {
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4">
           <Link
             to={ROUTES.projects}
-            className="group flex items-center gap-2.5"
+            className="group flex min-w-0 items-center gap-2.5"
           >
             <BrandMark
               size={30}
               className="text-primary transition-transform duration-500 ease-spring group-hover:-rotate-12 group-hover:scale-110"
             />
-            <span className="font-soft hidden font-serif text-xl font-medium tracking-tight text-foreground sm:inline">
+            <span className="font-soft truncate font-serif text-lg font-medium tracking-tight text-foreground sm:text-xl">
               Darmix Tasking
             </span>
           </Link>

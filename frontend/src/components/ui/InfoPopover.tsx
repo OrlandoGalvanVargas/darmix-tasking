@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { cn } from "@/lib/cn";
 
 interface InfoPopoverProps {
@@ -18,6 +24,36 @@ export function InfoPopover({
 }: InfoPopoverProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const popover = popoverRef.current;
+    const anchor = ref.current;
+    if (!open || !popover || !anchor) return;
+
+    const margin = 12;
+    const a = anchor.getBoundingClientRect();
+    const w = popover.offsetWidth;
+    const left =
+      align === "end"
+        ? a.right - w
+        : align === "start"
+          ? a.left
+          : a.left + a.width / 2 - w / 2;
+
+    let dx = 0;
+    if (left < margin) dx = margin - left;
+    else if (left + w > window.innerWidth - margin) {
+      dx = window.innerWidth - margin - (left + w);
+    }
+
+    popover.style.translate =
+      dx === 0
+        ? ""
+        : align === "center"
+          ? `calc(-50% + ${dx}px) 0`
+          : `${dx}px 0`;
+  }, [open, align]);
 
   useEffect(() => {
     if (!open) return;
@@ -67,12 +103,24 @@ export function InfoPopover({
 
       {open && (
         <div
+          ref={popoverRef}
           role="dialog"
           aria-label={label}
           className={cn(
-            "absolute z-50 w-72 rounded-xl border border-border bg-surface p-4 text-left shadow-xl",
-            "animate-fade-in-up",
+            "animate-pop-in absolute z-50 w-72 max-w-[calc(100vw-1.5rem)] rounded-xl border border-border bg-surface p-4 text-left shadow-xl",
             side === "top" ? "bottom-full mb-2" : "top-full mt-2",
+
+            side === "top"
+              ? align === "end"
+                ? "origin-bottom-right"
+                : align === "start"
+                  ? "origin-bottom-left"
+                  : "origin-bottom"
+              : align === "end"
+                ? "origin-top-right"
+                : align === "start"
+                  ? "origin-top-left"
+                  : "origin-top",
             align === "end" && "right-0",
             align === "start" && "left-0",
             align === "center" && "left-1/2 -translate-x-1/2",
