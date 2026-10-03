@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalProps {
@@ -9,7 +9,19 @@ interface ModalProps {
   footer?: ReactNode;
 }
 
+const EXIT_MS = 160;
+
 export function Modal({ open, onClose, title, children, footer }: ModalProps) {
+  const [mounted, setMounted] = useState(open);
+  if (open && !mounted) setMounted(true);
+  const closing = mounted && !open;
+
+  useEffect(() => {
+    if (!closing) return;
+    const timer = window.setTimeout(() => setMounted(false), EXIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [closing]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -24,11 +36,12 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!mounted) return null;
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px] data-[closing=true]:pointer-events-none"
+      data-closing={closing}
       onClick={onClose}
       role="presentation"
     >
@@ -36,16 +49,19 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="w-full max-w-lg rounded-card border border-border bg-surface shadow-xl"
+        data-closing={closing}
+        className="modal-panel w-full max-w-lg rounded-card border border-border bg-surface shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+          <h2 className="font-soft text-xl font-medium text-foreground">
+            {title}
+          </h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="rounded-lg p-1 text-foreground-muted transition hover:bg-surface-muted hover:text-foreground"
+            className="rounded-lg p-1 text-foreground-muted transition hover:rotate-90 hover:bg-surface-muted hover:text-foreground"
           >
             <svg
               width="20"

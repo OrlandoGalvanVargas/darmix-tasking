@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Modal } from "./Modal";
 import { Button } from "./Button";
 
@@ -24,9 +25,16 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const [shown, setShown] = useState({ title, message });
+  if (open && (shown.title !== title || shown.message !== message)) {
+    setShown({ title, message });
+  }
+
   return (
-    <Modal open={open} onClose={onCancel} title={title}>
-      <p className="text-sm text-foreground-muted">{message}</p>
+    <Modal open={open} onClose={onCancel} title={shown.title}>
+      <p className="text-sm leading-relaxed text-foreground-muted">
+        {shown.message}
+      </p>
 
       <div className="mt-6 flex justify-end gap-2">
         <Button variant="secondary" onClick={onCancel} disabled={isLoading}>

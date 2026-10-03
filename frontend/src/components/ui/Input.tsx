@@ -15,14 +15,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 ) {
   const inputId = id ?? rest.name ?? undefined;
   const errorId = error ? `${inputId}-error` : undefined;
-  const hintId = hint ? `${inputId}-hint` : undefined;
+
+  const hintId = hint && !error ? `${inputId}-hint` : undefined;
 
   return (
-    <div className="space-y-1.5">
+    <div className="group space-y-1.5">
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-sm font-medium text-foreground"
+          className={cn(
+            "block text-sm font-medium transition-colors duration-200",
+            error
+              ? "text-danger"
+              : "text-foreground group-focus-within:text-primary",
+          )}
         >
           {label}
         </label>
@@ -46,14 +52,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           aria-invalid={error ? "true" : undefined}
           aria-describedby={cn(errorId, hintId) || undefined}
           className={cn(
-            "block w-full rounded-xl border bg-surface px-3.5 py-2.5 text-sm text-foreground",
+            "block w-full rounded-xl border bg-surface px-3.5 py-2.5 text-sm text-foreground caret-accent",
             "placeholder:text-foreground-muted/50",
-            "transition-all duration-200",
+            "transition-[border-color,box-shadow] duration-200",
             "focus:outline-none focus:ring-4",
             "disabled:cursor-not-allowed disabled:opacity-60",
             error
-              ? "border-danger focus:border-danger focus:ring-danger/15"
-              : "border-border focus:border-primary focus:ring-primary/15",
+              ? "animate-shake border-danger focus:border-danger focus:ring-danger/15"
+              : "border-border hover:border-foreground-muted/40 focus:border-primary focus:ring-primary/15",
             Boolean(leftIcon) && "pl-10",
             Boolean(rightSlot) && "pr-11",
             className,
@@ -69,7 +75,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       </div>
 
       {error ? (
-        <p id={errorId} className="text-xs font-medium text-danger">
+        <p
+          id={errorId}
+          aria-live="polite"
+          className="text-xs font-medium text-danger"
+        >
           {error}
         </p>
       ) : hint ? (

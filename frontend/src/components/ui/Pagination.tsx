@@ -1,4 +1,4 @@
-import { Button } from "./Button";
+import { cn } from "@/lib/cn";
 
 interface PaginationProps {
   currentPage: number;
@@ -9,6 +9,27 @@ interface PaginationProps {
   onChange: (page: number) => void;
   disabled?: boolean;
 }
+
+function Chevron({ dir }: { dir: "left" | "right" }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={dir === "left" ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"} />
+    </svg>
+  );
+}
+
+const STEP_BUTTON =
+  "inline-flex h-9 items-center gap-1 rounded-full px-3 text-sm font-medium text-foreground-muted transition hover:bg-surface-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent";
 
 export function Pagination({
   currentPage,
@@ -35,20 +56,23 @@ export function Pagination({
       </p>
 
       <div className="flex items-center gap-1">
-        <Button
-          variant="secondary"
-          size="sm"
+        <button
+          type="button"
+          className={STEP_BUTTON}
           onClick={() => onChange(currentPage - 1)}
           disabled={disabled || currentPage <= 1}
+          aria-label="Página anterior"
         >
-          Anterior
-        </Button>
+          <Chevron dir="left" />
+          <span className="hidden sm:inline">Anterior</span>
+        </button>
 
         {pages.map((p, idx) =>
           p === "…" ? (
             <span
               key={`gap-${idx}`}
-              className="px-2 text-sm text-foreground-muted"
+              className="px-1.5 text-sm text-foreground-muted"
+              aria-hidden="true"
             >
               …
             </span>
@@ -59,26 +83,29 @@ export function Pagination({
               disabled={disabled}
               onClick={() => onChange(p)}
               aria-current={p === currentPage ? "page" : undefined}
-              className={
-                "min-w-9 rounded-lg border px-3 py-1.5 text-sm font-medium transition " +
-                (p === currentPage
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-surface text-foreground hover:bg-surface-muted")
-              }
+              aria-label={`Página ${p}`}
+              className={cn(
+                "grid h-9 min-w-9 place-items-center rounded-full px-2 font-serif text-base tabular-nums transition-all duration-300 ease-spring",
+                p === currentPage
+                  ? "scale-110 bg-primary text-primary-foreground"
+                  : "text-foreground hover:bg-surface-muted",
+              )}
             >
               {p}
             </button>
           ),
         )}
 
-        <Button
-          variant="secondary"
-          size="sm"
+        <button
+          type="button"
+          className={STEP_BUTTON}
           onClick={() => onChange(currentPage + 1)}
           disabled={disabled || currentPage >= lastPage}
+          aria-label="Página siguiente"
         >
-          Siguiente
-        </Button>
+          <span className="hidden sm:inline">Siguiente</span>
+          <Chevron dir="right" />
+        </button>
       </div>
     </nav>
   );

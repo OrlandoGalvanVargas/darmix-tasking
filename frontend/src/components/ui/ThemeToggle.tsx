@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useTheme, type Theme } from "@/hooks/useTheme";
 import { cn } from "@/lib/cn";
 
@@ -65,6 +66,7 @@ export function ThemeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -82,11 +84,54 @@ export function ThemeToggle() {
     };
   }, [open]);
 
+  const applyTheme = (next: Theme) => {
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const rect = buttonRef.current?.getBoundingClientRect();
+
+    if (reduce || !rect || typeof document.startViewTransition !== "function") {
+      setTheme(next);
+      return;
+    }
+
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    );
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => setTheme(next));
+    });
+
+    transition.ready
+      .then(() => {
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${radius}px at ${x}px ${y}px)`,
+            ],
+          },
+          {
+            duration: 650,
+            easing: "cubic-bezier(0.22, 0.8, 0.24, 1)",
+            pseudoElement: "::view-transition-new(root)",
+          },
+        );
+      })
+      .catch(() => {});
+  };
+
   const current = OPTIONS.find((o) => o.value === theme) ?? OPTIONS[2];
+  const dark = resolvedTheme === "dark";
 
   return (
     <div ref={containerRef} className="relative">
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
@@ -99,13 +144,34 @@ export function ThemeToggle() {
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
         )}
       >
-        {resolvedTheme === "dark" ? OPTIONS[1].icon : OPTIONS[0].icon}
+        <span className="relative block h-4 w-4" aria-hidden="true">
+          <span
+            className={cn(
+              "absolute inset-0 transition-all duration-500 ease-spring",
+              dark
+                ? "rotate-90 scale-0 opacity-0"
+                : "rotate-0 scale-100 opacity-100",
+            )}
+          >
+            {OPTIONS[0].icon}
+          </span>
+          <span
+            className={cn(
+              "absolute inset-0 transition-all duration-500 ease-spring",
+              dark
+                ? "rotate-0 scale-100 opacity-100"
+                : "-rotate-90 scale-0 opacity-0",
+            )}
+          >
+            {OPTIONS[1].icon}
+          </span>
+        </span>
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-30 mt-1 w-36 overflow-hidden rounded-lg border border-border bg-surface shadow-lg"
+          className="animate-pop-in absolute right-0 z-30 mt-1 w-36 origin-top-right overflow-hidden rounded-lg border border-border bg-surface shadow-lg"
         >
           {OPTIONS.map((opt) => (
             <button
@@ -114,8 +180,8 @@ export function ThemeToggle() {
               role="menuitemradio"
               aria-checked={theme === opt.value}
               onClick={() => {
-                setTheme(opt.value);
                 setOpen(false);
+                if (opt.value !== theme) applyTheme(opt.value);
               }}
               className={cn(
                 "flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition",
