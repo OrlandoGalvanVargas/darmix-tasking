@@ -4,7 +4,7 @@ import { API_ROUTES } from "@/constants/api";
 import { tokenStorage } from "@/services/storage/token";
 import { ApiError } from "./ApiError";
 import { refreshAccessToken } from "./refresh";
-import type { ApiFailure } from "@/types/api"; // O ajusta el path donde tengas definido ApiFailure
+import type { ApiFailure } from "@/types/api";
 
 const SKIP_REFRESH_PATHS: string[] = [
   API_ROUTES.auth.login,

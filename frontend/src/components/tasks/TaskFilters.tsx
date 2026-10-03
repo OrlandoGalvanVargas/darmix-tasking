@@ -53,7 +53,7 @@ export function TaskFilters({ value, onChange, onCreate }: TaskFiltersProps) {
   const hasFilters = Boolean(value.status || value.priority || value.search);
 
   return (
-    <div className="flex flex-col gap-3 rounded-card border border-border bg-surface p-4 sm:flex-row sm:items-end">
+    <div className="flex flex-col gap-3 border-y border-border py-4 sm:flex-row sm:items-end">
       <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-3">
         <Select
           label="Estado"
@@ -72,6 +72,22 @@ export function TaskFilters({ value, onChange, onCreate }: TaskFiltersProps) {
           placeholder="Título o descripción"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          leftIcon={
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+          }
         />
       </div>
 
@@ -87,7 +103,28 @@ export function TaskFilters({ value, onChange, onCreate }: TaskFiltersProps) {
             Limpiar
           </Button>
         )}
-        <Button onClick={onCreate}>Nueva tarea</Button>
+        <Button
+          onClick={onCreate}
+          leftIcon={
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          }
+        >
+          Nueva tarea
+          <kbd className="ml-1 hidden rounded border border-primary-foreground/30 px-1.5 text-[11px] font-medium leading-5 text-primary-foreground/80 sm:inline">
+            N
+          </kbd>
+        </Button>
       </div>
     </div>
   );

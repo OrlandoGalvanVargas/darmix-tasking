@@ -1,13 +1,14 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
+import { StatusSwitch } from "@/components/tasks/StatusSwitch";
+import { PrioritySwitch } from "@/components/tasks/PriorityMark";
 import { taskSchema, type TaskForm } from "@/schemas/task";
-import { TASK_PRIORITY, TASK_STATUS } from "@/constants/task";
+import type { TaskPriority, TaskStatus } from "@/constants/task";
 import { toDateInputValue } from "@/lib/dates";
 import { useCreateTask, useUpdateTask } from "@/hooks/useTasks";
 import { ApiError } from "@/services/http/ApiError";
@@ -19,16 +20,6 @@ interface TaskFormModalProps {
   projectId: number;
   task?: Task;
 }
-
-const statusOptions = Object.entries(TASK_STATUS).map(([value, meta]) => ({
-  value,
-  label: meta.label,
-}));
-
-const priorityOptions = Object.entries(TASK_PRIORITY).map(([value, meta]) => ({
-  value,
-  label: meta.label,
-}));
 
 export function TaskFormModal({
   open,
@@ -69,6 +60,7 @@ function TaskForm({
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<TaskForm>({
     resolver: zodResolver(taskSchema),
@@ -136,19 +128,46 @@ function TaskForm({
         {...register("description")}
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Select
-          label="Estado"
-          options={statusOptions}
-          error={errors.status?.message}
-          {...register("status")}
+      <div className="space-y-1.5">
+        <p className="text-sm font-medium text-foreground">Estado</p>
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <StatusSwitch
+              labels="all"
+              size={18}
+              value={field.value as TaskStatus}
+              onChange={field.onChange}
+              ariaLabel="Estado"
+            />
+          )}
         />
-        <Select
-          label="Prioridad"
-          options={priorityOptions}
-          error={errors.priority?.message}
-          {...register("priority")}
+        {errors.status?.message && (
+          <p className="text-xs font-medium text-danger">
+            {errors.status.message}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-1.5">
+        <p className="text-sm font-medium text-foreground">Prioridad</p>
+        <Controller
+          name="priority"
+          control={control}
+          render={({ field }) => (
+            <PrioritySwitch
+              value={field.value as TaskPriority}
+              onChange={field.onChange}
+              ariaLabel="Prioridad"
+            />
+          )}
         />
+        {errors.priority?.message && (
+          <p className="text-xs font-medium text-danger">
+            {errors.priority.message}
+          </p>
+        )}
       </div>
 
       <Input
@@ -159,7 +178,10 @@ function TaskForm({
       />
 
       {rootError && (
-        <div className="rounded-lg border border-danger/40 bg-danger-soft px-3 py-2 text-sm text-danger">
+        <div
+          role="alert"
+          className="animate-shake rounded-lg border border-danger/40 bg-danger-soft px-3 py-2 text-sm text-danger"
+        >
           {rootError}
         </div>
       )}

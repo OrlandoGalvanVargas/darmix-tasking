@@ -1,10 +1,11 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
+import { ProjectSeal } from "@/components/projects/ProjectSeal";
 import { projectSchema, type ProjectForm } from "@/schemas/project";
 import { useCreateProject, useUpdateProject } from "@/hooks/useProjects";
 import { ApiError } from "@/services/http/ApiError";
@@ -51,6 +52,7 @@ function ProjectForm({
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<ProjectForm>({
     resolver: zodResolver(projectSchema),
@@ -59,6 +61,8 @@ function ProjectForm({
       description: project?.description ?? "",
     },
   });
+
+  const liveName = useWatch({ control, name: "name" }) ?? "";
 
   const onSubmit = async (values: ProjectForm) => {
     setRootError(null);
@@ -89,29 +93,53 @@ function ProjectForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <Input
-        label="Nombre"
-        placeholder="Nombre del proyecto"
-        autoFocus
-        error={errors.name?.message}
-        {...register("name")}
-      />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+      {}
+      <div className="flex items-center gap-4 rounded-xl bg-surface-muted/60 px-4 py-3">
+        <ProjectSeal name={liveName} id={project?.id} size="lg" live />
+        <div className="min-w-0">
+          <p
+            className={
+              liveName.trim()
+                ? "truncate font-serif text-xl font-medium text-foreground"
+                : "truncate font-serif text-xl font-medium text-foreground-muted/60"
+            }
+          >
+            {liveName.trim() || "Sin nombre todavía"}
+          </p>
+          <p className="text-xs text-foreground-muted">
+            Así aparecerá en tu lista
+          </p>
+        </div>
+      </div>
 
-      <Textarea
-        label="Descripción (opcional)"
-        placeholder="Describe brevemente el objetivo del proyecto"
-        error={errors.description?.message}
-        {...register("description")}
-      />
+      <div className="space-y-4">
+        <Input
+          label="Nombre"
+          placeholder="Nombre del proyecto"
+          autoFocus
+          error={errors.name?.message}
+          {...register("name")}
+        />
+
+        <Textarea
+          label="Descripción (opcional)"
+          placeholder="Describe brevemente el objetivo del proyecto"
+          error={errors.description?.message}
+          {...register("description")}
+        />
+      </div>
 
       {rootError && (
-        <div className="rounded-lg border border-danger/40 bg-danger-soft px-3 py-2 text-sm text-danger">
+        <div
+          role="alert"
+          className="animate-shake rounded-lg border border-danger/40 bg-danger-soft px-3 py-2 text-sm text-danger"
+        >
           {rootError}
         </div>
       )}
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="flex justify-end gap-2 pt-1">
         <Button variant="secondary" onClick={onClose} disabled={isSubmitting}>
           Cancelar
         </Button>

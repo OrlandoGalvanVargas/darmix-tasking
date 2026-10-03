@@ -4,7 +4,7 @@ export interface LocalUser {
   id: number;
   name: string;
   email: string;
-  password: string; // texto plano porque es una demo local
+  password: string;
   created_at: string;
 }
 
