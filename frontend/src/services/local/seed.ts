@@ -11,15 +11,15 @@ export function createSeed(): LocalDbSchema {
   const users: LocalUser[] = [
     {
       id: 1,
-      name: "Usuario Demo",
-      email: "demo@grupobalak.test",
+      name: "Darmix",
+      email: "demo@darmixista.test",
       password: "password123",
       created_at: now,
     },
     {
       id: 2,
-      name: "Otro Usuario",
-      email: "otro@grupobalak.test",
+      name: "Jambi",
+      email: "otro@darmixista.test",
       password: "password123",
       created_at: now,
     },

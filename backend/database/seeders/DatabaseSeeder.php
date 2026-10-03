@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $demo = User::factory()->create([
             'name' => 'Usuario Demo',
-            'email' => 'demo@grupobalak.test',
+            'email' => 'demo@darmixista.test',
             'password' => Hash::make('password123'),
         ]);
 
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             ->has(Project::factory()->has(Task::factory()->count(3)))
             ->create([
                 'name' => 'Otro Usuario',
-                'email' => 'otro@grupobalak.test',
+                'email' => 'otro@darmixista.test',
                 'password' => Hash::make('password123'),
             ]);
     }
