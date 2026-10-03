@@ -8,22 +8,31 @@
       name="description"
       content="Darmix Tasking — Gestión de proyectos y tareas"
     />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Darmix Tasking" />
+    <meta
+      property="og:description"
+      content="Gestión de proyectos y tareas donde cada tarea es una hoja."
+    />
     <link rel="icon" type="image/png" href="/logo.png" />
-
+    <meta name="theme-color" content="#fdfcfb" />
     <script>
       (function () {
         try {
           var stored = localStorage.getItem("task-manager:theme");
           var dark =
             stored === "dark" ||
-            ((!stored || stored === "system") &&
+            (stored === "system" &&
               window.matchMedia("(prefers-color-scheme: dark)").matches);
-          document.documentElement.classList.toggle("dark", dark);
+          var root = document.documentElement;
+          root.classList.toggle("dark", dark);
+          root.style.colorScheme = dark ? "dark" : "light";
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", dark ? "#1a1c22" : "#fdfcfb");
         } catch (e) {}
       })();
     </script>
     <title>Darmix Tasking | Organiza tu trabajo</title>
-    <meta name="theme-color" content="#4a7c6f" />
   </head>
   <body>
     <div id="root"></div>

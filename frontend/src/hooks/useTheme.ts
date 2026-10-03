@@ -4,7 +4,14 @@ import { STORAGE_KEYS } from "@/constants/storage";
 export type Theme = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
 
+const DEFAULT_THEME: Theme = "light";
+
 const MEDIA_QUERY = "(prefers-color-scheme: dark)";
+
+const THEME_COLORS: Record<ResolvedTheme, string> = {
+  light: "#fdfcfb",
+  dark: "#1a1c22",
+};
 
 function getSystemTheme(): ResolvedTheme {
   if (typeof window === "undefined") return "light";
@@ -15,18 +22,28 @@ function applyTheme(theme: Theme): ResolvedTheme {
   const resolved: ResolvedTheme = theme === "system" ? getSystemTheme() : theme;
   if (typeof window !== "undefined") {
     document.documentElement.classList.toggle("dark", resolved === "dark");
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", THEME_COLORS[resolved]);
   }
   return resolved;
 }
 
-export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "system";
+function readStoredTheme(): Theme {
+  if (typeof window === "undefined") return DEFAULT_THEME;
+  try {
     const stored = localStorage.getItem(STORAGE_KEYS.theme);
-    if (stored === "light" || stored === "dark" || stored === "system")
+    if (stored === "light" || stored === "dark" || stored === "system") {
       return stored;
-    return "system";
-  });
+    }
+  } catch {
+    /* */
+  }
+  return DEFAULT_THEME;
+}
+
+export function useTheme() {
+  const [theme, setThemeState] = useState<Theme>(readStoredTheme);
 
   const resolvedTheme = theme === "system" ? getSystemTheme() : theme;
 
@@ -46,7 +63,11 @@ export function useTheme() {
   }, [theme]);
 
   const setTheme = useCallback((next: Theme) => {
-    localStorage.setItem(STORAGE_KEYS.theme, next);
+    try {
+      localStorage.setItem(STORAGE_KEYS.theme, next);
+    } catch {
+      /* */
+    }
     setThemeState(next);
   }, []);
 
