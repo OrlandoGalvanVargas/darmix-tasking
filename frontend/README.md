@@ -1,6 +1,7 @@
 <div align="center">
 
 # Task Manager (Frontend)
+
 [🌐 Ver Demo Online](https://grupo-balak-task-manager.pages.dev/)
 
 SPA en React 19 y TypeScript que consume la API RESTful del backend Laravel.
@@ -144,13 +145,13 @@ frontend/
 **1. Clonar el repositorio** (omite este paso si ya lo hiciste para el backend):
 
 ```bash
-git clone https://github.com/OrlandoGalvanVargas/grupo-balak-task-manager.git
+git clone https://github.com/OrlandoGalvanVargas/darmix-tasking.git
 ```
 
 **2. Entrar a la carpeta del proyecto:**
 
 ```bash
-cd grupo-balak-task-manager
+cd darmix-tasking
 ```
 
 **3. Entrar a la carpeta del frontend:**
@@ -217,13 +218,13 @@ docker network create task_manager_net
 **3. Clonar el repositorio** (omite este paso si ya lo hiciste):
 
 ```bash
-git clone https://github.com/OrlandoGalvanVargas/grupo-balak-task-manager.git
+git clone https://github.com/OrlandoGalvanVargas/darmix-tasking.git
 ```
 
 **4. Entrar a la carpeta del frontend:**
 
 ```bash
-cd grupo-balak-task-manager/frontend
+cd darmix-tasking/frontend
 ```
 
 **5. Construir y levantar el contenedor:**
@@ -399,8 +400,8 @@ Las mismas que en el backend, también disponibles en el modo demo local:
 
 | Usuario      | Email                  | Contraseña    | Descripción                                                           |
 | ------------ | ---------------------- | ------------- | --------------------------------------------------------------------- |
-| Usuario Demo | `demo@grupobalak.test` | `password123` | Usuario principal con proyectos y tareas de ejemplo                   |
-| Otro Usuario | `otro@grupobalak.test` | `password123` | Usuario secundario, útil para comprobar el aislamiento entre usuarios |
+| Usuario Demo | `demo@darmixista.test` | `password123` | Usuario principal con proyectos y tareas de ejemplo                   |
+| Otro Usuario | `otro@darmixista.test` | `password123` | Usuario secundario, útil para comprobar el aislamiento entre usuarios |
 
 ---
 

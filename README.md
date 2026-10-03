@@ -211,8 +211,8 @@ El seeder crea dos usuarios, también disponibles en el modo demo del frontend:
 
 | Usuario      | Email                  | Contraseña    | Descripción                                                      |
 | ------------ | ---------------------- | ------------- | ---------------------------------------------------------------- |
-| Usuario Demo | `demo@grupobalak.test` | `password123` | Usuario principal con proyectos y tareas de ejemplo              |
-| Otro Usuario | `otro@grupobalak.test` | `password123` | Usuario secundario, para comprobar el aislamiento entre usuarios |
+| Usuario Demo | `demo@darmixista.test` | `password123` | Usuario principal con proyectos y tareas de ejemplo              |
+| Otro Usuario | `otro@darmixista.test` | `password123` | Usuario secundario, para comprobar el aislamiento entre usuarios |
 
 ---
 

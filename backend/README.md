@@ -35,14 +35,14 @@ API RESTful para la gestión de proyectos y tareas, construida con Laravel 12 y 
 
 ## Stack tecnológico
 
-| Componente | Tecnología |
-| --- | --- |
-| Lenguaje | PHP `^8.2` |
-| Framework | Laravel `^12.0` |
-| Autenticación | `php-open-source-saver/jwt-auth` `^2.7` |
-| Base de datos | MySQL 8 / MariaDB (InnoDB, `utf8mb4`) |
-| Tests | Pest 3 + plugin de Laravel |
-| Estilo de código | Laravel Pint |
+| Componente       | Tecnología                              |
+| ---------------- | --------------------------------------- |
+| Lenguaje         | PHP `^8.2`                              |
+| Framework        | Laravel `^12.0`                         |
+| Autenticación    | `php-open-source-saver/jwt-auth` `^2.7` |
+| Base de datos    | MySQL 8 / MariaDB (InnoDB, `utf8mb4`)   |
+| Tests            | Pest 3 + plugin de Laravel              |
+| Estilo de código | Laravel Pint                            |
 
 ---
 
@@ -79,13 +79,13 @@ Flujo de una petición: **Route → Middleware (JWT) → Form Request (validaci�
 **1. Clonar el repositorio:**
 
 ```bash
-git clone https://github.com/OrlandoGalvanVargas/grupo-balak-task-manager.git
+git clone https://github.com/OrlandoGalvanVargas/darmix-tasking.git
 ```
 
 **2. Entrar a la carpeta del proyecto:**
 
 ```bash
-cd grupo-balak-task-manager
+cd darmix-tasking
 ```
 
 **3. Entrar a la carpeta del backend:**
@@ -147,7 +147,7 @@ Respuesta esperada:
 
 ```json
 {
-  "success": true
+    "success": true
 }
 ```
 
@@ -162,13 +162,13 @@ Alternativa que no requiere PHP ni MySQL instalados localmente; solo Docker y Do
 **1. Clonar el repositorio:**
 
 ```bash
-git clone https://github.com/OrlandoGalvanVargas/grupo-balak-task-manager.git
+git clone https://github.com/OrlandoGalvanVargas/darmix-tasking.git
 ```
 
 **2. Entrar a la carpeta del proyecto:**
 
 ```bash
-cd grupo-balak-task-manager
+cd darmix-tasking
 ```
 
 **3. Entrar a la carpeta del backend:**
@@ -182,6 +182,7 @@ cd backend
 ```bash
 docker-compose up -d --build
 ```
+
 > **Nota:** La primera vez, la construcción de las imágenes y la configuración del backend tardarán unos minutos. El contenedor se encargará automáticamente de crear el archivo `.env`, generar las llaves de seguridad y ejecutar las migraciones de la base de datos.
 
 **5. Comprobar que todos los servicios están en ejecución:**
@@ -206,7 +207,7 @@ Respuesta esperada:
 
 ```json
 {
-  "success": true
+    "success": true
 }
 ```
 
@@ -238,18 +239,18 @@ Todos los comandos de `php artisan` en Docker se ejecutan con el prefijo `docker
 
 ## Variables de entorno
 
-| Variable | Descripción | Ejemplo |
-| --- | --- | --- |
-| `APP_KEY` | Clave de la aplicación (`php artisan key:generate`) | generada |
-| `APP_URL` | URL base de la API | `http://127.0.0.1:8000` |
-| `DB_CONNECTION` | Driver de base de datos | `mysql` |
-| `DB_HOST` / `DB_PORT` | Servidor y puerto de MySQL | `127.0.0.1` / `3306` |
-| `DB_DATABASE` | Base de datos de la aplicación | `task_manager` |
-| `DB_USERNAME` / `DB_PASSWORD` | Credenciales de MySQL | `root` / (vacío) |
-| `JWT_SECRET` | Secreto de firma de tokens. Se incluye un valor de desarrollo en `.env.example`; en producción debe generarse uno propio con `php artisan jwt:secret` | incluido |
-| `JWT_TTL` | Vida del token de acceso, en minutos | `60` |
-| `JWT_REFRESH_TTL` | Ventana de refresh tras expirar, en minutos | `20160` |
-| `JWT_BLACKLIST_GRACE_PERIOD` | Tolerancia en segundos tras un refresh (peticiones concurrentes) | `30` |
+| Variable                      | Descripción                                                                                                                                           | Ejemplo                 |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `APP_KEY`                     | Clave de la aplicación (`php artisan key:generate`)                                                                                                   | generada                |
+| `APP_URL`                     | URL base de la API                                                                                                                                    | `http://127.0.0.1:8000` |
+| `DB_CONNECTION`               | Driver de base de datos                                                                                                                               | `mysql`                 |
+| `DB_HOST` / `DB_PORT`         | Servidor y puerto de MySQL                                                                                                                            | `127.0.0.1` / `3306`    |
+| `DB_DATABASE`                 | Base de datos de la aplicación                                                                                                                        | `task_manager`          |
+| `DB_USERNAME` / `DB_PASSWORD` | Credenciales de MySQL                                                                                                                                 | `root` / (vacío)        |
+| `JWT_SECRET`                  | Secreto de firma de tokens. Se incluye un valor de desarrollo en `.env.example`; en producción debe generarse uno propio con `php artisan jwt:secret` | incluido                |
+| `JWT_TTL`                     | Vida del token de acceso, en minutos                                                                                                                  | `60`                    |
+| `JWT_REFRESH_TTL`             | Ventana de refresh tras expirar, en minutos                                                                                                           | `20160`                 |
+| `JWT_BLACKLIST_GRACE_PERIOD`  | Tolerancia en segundos tras un refresh (peticiones concurrentes)                                                                                      | `30`                    |
 
 ---
 
@@ -257,10 +258,10 @@ Todos los comandos de `php artisan` en Docker se ejecutan con el prefijo `docker
 
 El seeder crea dos usuarios:
 
-| Usuario | Email | Contraseña | Datos |
-| --- | --- | --- | --- |
-| Usuario Demo | `demo@grupobalak.test` | `password123` | 3 proyectos y 24 tareas |
-| Otro Usuario | `otro@grupobalak.test` | `password123` | 1 proyecto con tareas (sirve para verificar el aislamiento entre usuarios) |
+| Usuario      | Email                  | Contraseña    | Datos                                                                      |
+| ------------ | ---------------------- | ------------- | -------------------------------------------------------------------------- |
+| Usuario Demo | `demo@darmixista.test` | `password123` | 3 proyectos y 24 tareas                                                    |
+| Otro Usuario | `otro@darmixista.test` | `password123` | 1 proyecto con tareas (sirve para verificar el aislamiento entre usuarios) |
 
 ---
 
@@ -271,7 +272,7 @@ La API usa **JWT** enviado en la cabecera `Authorization: Bearer <token>`.
 **1. Login.** Devuelve un `access_token`, su tipo y su duración en segundos:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/auth/login -H "Content-Type: application/json" -H "Accept: application/json" -d '{"email":"demo@grupobalak.test","password":"password123"}'
+curl -X POST http://127.0.0.1:8000/api/auth/login -H "Content-Type: application/json" -H "Accept: application/json" -d '{"email":"demo@darmixista.test","password":"password123"}'
 ```
 
 **2. Petición protegida.** Sustituye `<access_token>` por el token obtenido:
@@ -292,40 +293,40 @@ Los endpoints de registro y login tienen limitación de intentos (`throttle`) co
 
 ### Autenticación (`/api/auth`)
 
-| Método | Ruta | Descripción | Auth |
-| --- | --- | --- | --- |
-| POST | `/api/auth/register` | Registro de usuario | No |
-| POST | `/api/auth/login` | Login y obtención de token | No |
-| POST | `/api/auth/refresh` | Renovar token | Token (puede estar expirado) |
-| POST | `/api/auth/logout` | Invalidar token | Sí |
-| GET | `/api/auth/me` | Usuario autenticado | Sí |
+| Método | Ruta                 | Descripción                | Auth                         |
+| ------ | -------------------- | -------------------------- | ---------------------------- |
+| POST   | `/api/auth/register` | Registro de usuario        | No                           |
+| POST   | `/api/auth/login`    | Login y obtención de token | No                           |
+| POST   | `/api/auth/refresh`  | Renovar token              | Token (puede estar expirado) |
+| POST   | `/api/auth/logout`   | Invalidar token            | Sí                           |
+| GET    | `/api/auth/me`       | Usuario autenticado        | Sí                           |
 
 ### Proyectos (`/api/projects`), requiere Bearer token
 
-| Método | Ruta | Descripción |
-| --- | --- | --- |
-| GET | `/api/projects` | Listar proyectos del usuario |
-| POST | `/api/projects` | Crear proyecto |
-| GET | `/api/projects/{id}` | Detalle del proyecto con sus tareas |
-| PUT/PATCH | `/api/projects/{id}` | Actualizar proyecto |
-| DELETE | `/api/projects/{id}` | Eliminar proyecto (soft delete) |
+| Método    | Ruta                 | Descripción                         |
+| --------- | -------------------- | ----------------------------------- |
+| GET       | `/api/projects`      | Listar proyectos del usuario        |
+| POST      | `/api/projects`      | Crear proyecto                      |
+| GET       | `/api/projects/{id}` | Detalle del proyecto con sus tareas |
+| PUT/PATCH | `/api/projects/{id}` | Actualizar proyecto                 |
+| DELETE    | `/api/projects/{id}` | Eliminar proyecto (soft delete)     |
 
 ### Tareas (`/api/tasks`), requiere Bearer token
 
-| Método | Ruta | Descripción |
-| --- | --- | --- |
-| GET | `/api/tasks` | Listar tareas, con filtros |
-| POST | `/api/tasks` | Crear tarea |
-| GET | `/api/tasks/{id}` | Detalle de tarea |
-| PUT/PATCH | `/api/tasks/{id}` | Actualizar tarea |
-| DELETE | `/api/tasks/{id}` | Eliminar tarea (soft delete) |
+| Método    | Ruta              | Descripción                  |
+| --------- | ----------------- | ---------------------------- |
+| GET       | `/api/tasks`      | Listar tareas, con filtros   |
+| POST      | `/api/tasks`      | Crear tarea                  |
+| GET       | `/api/tasks/{id}` | Detalle de tarea             |
+| PUT/PATCH | `/api/tasks/{id}` | Actualizar tarea             |
+| DELETE    | `/api/tasks/{id}` | Eliminar tarea (soft delete) |
 
 **Filtros del listado de tareas** (query params, combinables):
 
-| Parámetro | Valores |
-| --- | --- |
-| `status` | `pending`, `in_progress`, `completed` |
-| `priority` | `low`, `medium`, `high` |
+| Parámetro  | Valores                               |
+| ---------- | ------------------------------------- |
+| `status`   | `pending`, `in_progress`, `completed` |
+| `priority` | `low`, `medium`, `high`               |
 
 Ejemplo:
 
@@ -344,22 +345,22 @@ GET /api/tasks?status=pending&priority=high
 
 ```json
 {
-  "message": "The email field must be a valid email address.",
-  "errors": {
-    "email": ["The email field must be a valid email address."]
-  }
+    "message": "The email field must be a valid email address.",
+    "errors": {
+        "email": ["The email field must be a valid email address."]
+    }
 }
 ```
 
-| Código | Significado |
-| --- | --- |
-| 200 / 201 | Éxito / recurso creado |
-| 401 | Token ausente, inválido, expirado o credenciales incorrectas |
-| 403 | El recurso existe pero pertenece a otro usuario |
-| 404 | Recurso inexistente |
-| 422 | Error de validación |
-| 429 | Demasiados intentos (throttle) |
-| 500 | Error interno (sin exponer detalles en producción) |
+| Código    | Significado                                                  |
+| --------- | ------------------------------------------------------------ |
+| 200 / 201 | Éxito / recurso creado                                       |
+| 401       | Token ausente, inválido, expirado o credenciales incorrectas |
+| 403       | El recurso existe pero pertenece a otro usuario              |
+| 404       | Recurso inexistente                                          |
+| 422       | Error de validación                                          |
+| 429       | Demasiados intentos (throttle)                               |
+| 500       | Error interno (sin exponer detalles en producción)           |
 
 Todas las rutas de `/api/*` responden siempre en JSON, aunque el cliente no envíe la cabecera `Accept`.
 
@@ -385,10 +386,10 @@ docker-compose exec app php artisan test
 
 Los tests usan `RefreshDatabase`, que recrea las tablas para garantizar el aislamiento entre pruebas. El efecto sobre tus datos depende de la base contra la que corran:
 
-| Los tests corren contra... | Efecto |
-| --- | --- |
-| `task_manager_testing` (configurada en `phpunit.xml`) | Tus datos de ejemplo no se tocan |
-| La misma base de la aplicación (`task_manager`) | Las tablas se vacían y hay que volver a ejecutar el seeder |
+| Los tests corren contra...                            | Efecto                                                     |
+| ----------------------------------------------------- | ---------------------------------------------------------- |
+| `task_manager_testing` (configurada en `phpunit.xml`) | Tus datos de ejemplo no se tocan                           |
+| La misma base de la aplicación (`task_manager`)       | Las tablas se vacían y hay que volver a ejecutar el seeder |
 
 Si después de correr los tests ya no encuentras los usuarios y datos de ejemplo, restáuralos con:
 
