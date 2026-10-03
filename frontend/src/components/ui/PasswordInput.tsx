@@ -14,6 +14,9 @@ interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   leftIcon?: ReactNode;
 }
 
+const TOGGLE_CLASS =
+  "flex h-8 w-8 items-center justify-center rounded-lg text-foreground-muted transition hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   function PasswordInput({ leftIcon, ...rest }, ref) {
     const [visible, setVisible] = useState(false);
@@ -28,8 +31,8 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             type="button"
             onClick={() => setVisible((v) => !v)}
             aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
-            className={cnToggle}
-            tabIndex={-1}
+            aria-pressed={visible}
+            className={TOGGLE_CLASS}
           >
             {visible ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
           </button>
@@ -40,5 +43,4 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   },
 );
 
-const cnToggle =
-  "flex h-8 w-8 items-center justify-center rounded-lg text-foreground-muted transition hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+PasswordInput.displayName = "PasswordInput";

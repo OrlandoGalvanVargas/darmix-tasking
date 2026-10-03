@@ -2,6 +2,7 @@ import { useMemo, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 
 export type LeafKind = "done" | "doing" | "todo";
+export type BranchTone = "default" | "inverse";
 
 interface GrowthBranchProps {
   pending: number;
@@ -9,7 +10,11 @@ interface GrowthBranchProps {
   completed: number;
   size?: "sm" | "lg";
 
+  tone?: BranchTone;
+
   highlight?: LeafKind | null;
+
+  reactive?: boolean;
   label?: string;
   className?: string;
 }
@@ -19,19 +24,28 @@ const SIZES = {
   lg: { height: 92, amp: 7, leaf: 26, max: 32, stroke: 2 },
 } as const;
 
-const LEAF_COLOR: Record<LeafKind, string> = {
-  done: "text-primary",
-  doing: "text-info",
-  todo: "text-foreground-muted",
+const LEAF_COLOR: Record<BranchTone, Record<LeafKind, string>> = {
+  default: {
+    done: "text-primary",
+    doing: "text-info",
+    todo: "text-foreground-muted",
+  },
+  inverse: {
+    done: "text-primary-foreground",
+    doing: "text-primary-foreground",
+    todo: "text-primary-foreground/55",
+  },
 };
 
 export function LeafGlyph({
   kind,
   size = 16,
+  tone = "default",
   className,
 }: {
   kind: LeafKind;
   size?: number;
+  tone?: BranchTone;
   className?: string;
 }) {
   return (
@@ -41,7 +55,7 @@ export function LeafGlyph({
       viewBox="0 0 16 16"
       fill="none"
       aria-hidden="true"
-      className={cn(LEAF_COLOR[kind], className)}
+      className={cn(LEAF_COLOR[tone][kind], className)}
     >
       {kind === "done" && (
         <>
@@ -51,7 +65,7 @@ export function LeafGlyph({
           />
           <path
             d="M8 13.4V5"
-            stroke="var(--surface)"
+            stroke={tone === "inverse" ? "var(--primary)" : "var(--surface)"}
             strokeWidth="1"
             strokeLinecap="round"
             opacity="0.6"
@@ -123,7 +137,9 @@ export function GrowthBranch({
   inProgress,
   completed,
   size = "sm",
+  tone = "default",
   highlight = null,
+  reactive = false,
   label,
   className,
 }: GrowthBranchProps) {
@@ -157,6 +173,7 @@ export function GrowthBranch({
     n === 0 ? 0 : c > 0 ? Math.min(1, (xAt(c - 1) + 4) / 100) : 0.03;
   const total = completed + inProgress + pending;
   const offset = cfg.leaf * 0.56 + 1;
+  const inverse = tone === "inverse";
 
   return (
     <div
@@ -180,7 +197,9 @@ export function GrowthBranch({
           stroke="currentColor"
           strokeWidth={cfg.stroke}
           strokeLinecap="round"
-          className="text-foreground-muted/30"
+          className={
+            inverse ? "text-primary-foreground/25" : "text-foreground-muted/30"
+          }
         />
         {n > 0 && (
           <path
@@ -190,7 +209,10 @@ export function GrowthBranch({
             stroke="currentColor"
             strokeWidth={cfg.stroke}
             strokeLinecap="round"
-            className="stem-grow text-primary"
+            className={cn(
+              "stem-grow",
+              inverse ? "text-primary-foreground" : "text-primary",
+            )}
             style={{ strokeDashoffset: 1 - grown }}
           />
         )}
@@ -202,6 +224,7 @@ export function GrowthBranch({
         const y = stemY(x) + (up ? -offset : offset);
         const dimmed = highlight !== null && highlight !== kind;
         const active = highlight === kind;
+        const delay = reactive ? (k % 6) * 30 : 350 + k * 45;
 
         return (
           <span
@@ -215,8 +238,9 @@ export function GrowthBranch({
             style={{ left: `${x}%`, top: y, width: cfg.leaf, height: cfg.leaf }}
           >
             <span
+              key={reactive ? kind : undefined}
               className="leaf-pop block h-full w-full"
-              style={{ "--delay": `${350 + k * 45}ms` } as CSSProperties}
+              style={{ "--delay": `${delay}ms` } as CSSProperties}
             >
               <span
                 className="leaf-sway block h-full w-full"
@@ -227,7 +251,7 @@ export function GrowthBranch({
                   } as CSSProperties
                 }
               >
-                <LeafGlyph kind={kind} size={cfg.leaf} />
+                <LeafGlyph kind={kind} size={cfg.leaf} tone={tone} />
               </span>
             </span>
           </span>

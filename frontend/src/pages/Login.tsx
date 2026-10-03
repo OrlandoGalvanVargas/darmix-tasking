@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate, useLocation } from "react-router";
 import { loginSchema, type LoginForm } from "@/schemas/auth";
@@ -7,12 +7,9 @@ import { useLoginMutation } from "@/hooks/useAuthMutations";
 import { Input } from "@/components/ui/Input";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Button } from "@/components/ui/Button";
-import {
-  MailIcon,
-  LockIcon,
-  ArrowRightIcon,
-  SparklesIcon,
-} from "@/components/ui/icons";
+import { LeafGlyph } from "@/components/projects/GrowthBranch";
+import { fieldLevel, useAuthGrowth } from "@/components/layout/authGrowth";
+import { MailIcon, LockIcon, ArrowRightIcon } from "@/components/ui/icons";
 import { ROUTES } from "@/constants/routes";
 import { ApiError } from "@/services/http/ApiError";
 
@@ -30,11 +27,22 @@ export default function Login() {
     handleSubmit,
     setValue,
     setError,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
+
+  const email = useWatch({ control, name: "email" }) ?? "";
+  const password = useWatch({ control, name: "password" }) ?? "";
+  const emailLevel = fieldLevel(email, /^\S+@\S+\.\S+$/.test(email));
+  const passwordLevel = fieldLevel(password, password.length >= 8);
+  const setLevels = useAuthGrowth()?.setLevels;
+
+  useEffect(() => {
+    setLevels?.([emailLevel, passwordLevel]);
+  }, [emailLevel, passwordLevel, setLevels]);
 
   const onSubmit = async (values: LoginForm) => {
     setRootError(null);
@@ -64,9 +72,8 @@ export default function Login() {
 
   return (
     <div className="space-y-8">
-      {}
       <header className="space-y-2">
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
+        <h1 className="font-soft text-4xl font-medium leading-[1.05] tracking-tight text-foreground sm:text-5xl">
           Bienvenido de nuevo
         </h1>
         <p className="text-sm text-foreground-muted">
@@ -108,7 +115,13 @@ export default function Login() {
           size="lg"
           fullWidth
           isLoading={isSubmitting}
-          rightIcon={<ArrowRightIcon size={18} />}
+          className="group"
+          rightIcon={
+            <ArrowRightIcon
+              size={18}
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+            />
+          }
         >
           Iniciar sesión
         </Button>
@@ -118,16 +131,18 @@ export default function Login() {
       <button
         type="button"
         onClick={fillDemoCredentials}
-        className="group flex w-full items-center gap-2.5 rounded-xl border border-dashed border-border bg-surface-muted/40 px-3.5 py-2.5 text-left transition hover:border-primary/50 hover:bg-primary/5"
+        className="group flex w-full items-center gap-3 rounded-xl border border-border px-3.5 py-3 text-left transition-colors hover:border-primary/50"
       >
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition group-hover:bg-primary/15">
-          <SparklesIcon size={14} />
-        </span>
+        <LeafGlyph
+          kind="doing"
+          size={22}
+          className="shrink-0 transition-transform duration-500 ease-spring group-hover:rotate-12 group-hover:scale-110"
+        />
         <span className="flex-1">
-          <span className="block text-xs font-medium text-foreground">
+          <span className="block text-sm font-medium text-foreground">
             Probar con credenciales demo
           </span>
-          <span className="block text-[11px] text-foreground-muted">
+          <span className="block text-xs text-foreground-muted">
             {DEMO_EMAIL} · {DEMO_PASSWORD}
           </span>
         </span>

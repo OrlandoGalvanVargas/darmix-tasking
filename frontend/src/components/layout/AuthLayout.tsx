@@ -1,61 +1,81 @@
+import { useState } from "react";
 import { Outlet } from "react-router";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { BrandMark } from "@/components/ui/BrandMark";
-import { SparklesIcon } from "@/components/ui/icons";
+import { GrowthBranch, LeafGlyph } from "@/components/projects/GrowthBranch";
+import {
+  type AuthOutletContext,
+  type FieldLevel,
+} from "@/components/layout/authGrowth";
+
+const TOTAL_LEAVES = 12;
+
+function toCounts(levels: FieldLevel[]) {
+  const per = levels.length ? Math.floor(TOTAL_LEAVES / levels.length) : 0;
+  let done = 0;
+  let doing = 0;
+  let todo = 0;
+  levels.forEach((level) => {
+    if (level === 2) done += per;
+    else if (level === 1) doing += per;
+    else todo += per;
+  });
+  return { done, doing, todo };
+}
 
 export function AuthLayout() {
+  const [levels, setLevels] = useState<FieldLevel[]>([0, 0]);
+  const { done, doing, todo } = toCounts(levels);
+  const context: AuthOutletContext = { setLevels };
+
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-2">
       {}
-      <aside className="relative hidden overflow-hidden bg-primary lg:flex lg:flex-col lg:justify-between lg:p-12">
-        {}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_55%)]"
-        />
-        {}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-            backgroundSize: "28px 28px",
-          }}
-        />
-        {}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-accent/25 blur-3xl"
-        />
-
-        <div className="relative flex items-center gap-3 animate-fade-in">
-          <BrandMark size={40} className="text-primary-foreground" />
-          <span className="text-xl font-semibold text-primary-foreground">
+      <aside className="relative hidden overflow-hidden bg-primary text-primary-foreground lg:flex lg:flex-col lg:justify-between lg:p-12">
+        <div className="flex items-center gap-3">
+          <BrandMark size={40} />
+          <span className="font-soft font-serif text-xl font-medium tracking-tight">
             Darmix Tasking
           </span>
         </div>
 
-        <div className="relative max-w-md space-y-6 animate-fade-in-up">
-          <h2 className="text-4xl font-bold leading-tight text-primary-foreground">
-            Organiza tu trabajo.
-            <br />
-            <span className="text-primary-foreground/75">
-              Termina lo importante.
-            </span>
+        <div className="max-w-lg">
+          <h2 className="font-soft text-balance text-5xl font-medium leading-[1.05] tracking-tight xl:text-6xl">
+            Cada tarea es una hoja.
           </h2>
-          <p className="text-base leading-relaxed text-primary-foreground/70">
-            Un espacio calmado para planear, priorizar y cerrar tareas sin
-            ruido.
+          <p className="mt-5 max-w-md text-base leading-relaxed text-primary-foreground/75">
+            Las pendientes son brotes, las que avanzan se abren y las terminadas
+            completan la rama.
           </p>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-1.5 text-xs font-medium text-primary-foreground backdrop-blur-sm">
-            <SparklesIcon size={14} />
-            Proyectos, tareas, prioridades — todo en un solo lugar
+          <div className="mt-14 space-y-5">
+            <GrowthBranch
+              size="lg"
+              tone="inverse"
+              reactive
+              pending={todo}
+              inProgress={doing}
+              completed={done}
+              label="Rama que crece mientras completas el formulario"
+            />
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-primary-foreground/75">
+              <li className="inline-flex items-center gap-2">
+                <LeafGlyph kind="todo" size={16} tone="inverse" />
+                Pendiente
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <LeafGlyph kind="doing" size={16} tone="inverse" />
+                En progreso
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <LeafGlyph kind="done" size={16} tone="inverse" />
+                Completada
+              </li>
+            </ul>
           </div>
         </div>
 
-        <p className="relative text-xs text-primary-foreground/50">
+        <p className="text-xs text-primary-foreground/55">
           © {new Date().getFullYear()} Darmix Tasking
         </p>
       </aside>
@@ -65,7 +85,7 @@ export function AuthLayout() {
         <header className="flex items-center justify-between px-5 py-4 sm:px-8">
           <div className="flex items-center gap-2 lg:hidden">
             <BrandMark size={28} className="text-primary" />
-            <span className="text-base font-semibold text-foreground">
+            <span className="font-soft font-serif text-lg font-medium tracking-tight text-foreground">
               Darmix Tasking
             </span>
           </div>
@@ -75,8 +95,18 @@ export function AuthLayout() {
         </header>
 
         <div className="flex flex-1 items-center justify-center px-5 pb-10 sm:px-8">
-          <div className="w-full max-w-sm animate-fade-in-up">
-            <Outlet />
+          <div className="animate-fade-in w-full max-w-sm">
+            {}
+            <GrowthBranch
+              size="sm"
+              reactive
+              pending={todo}
+              inProgress={doing}
+              completed={done}
+              className="mb-8 lg:hidden"
+              label="Rama que crece mientras completas el formulario"
+            />
+            <Outlet context={context} />
           </div>
         </div>
       </div>

@@ -29,9 +29,7 @@ export function DemoModeBanner() {
             Demo
           </span>
           <p className="text-foreground">
-            <span className="hidden sm:inline">
-              Modo demo local activo. Los datos viven en tu navegador.
-            </span>
+            <span className="hidden sm:inline">Modo demo local activo.</span>
             <span className="sm:hidden">Modo demo local activo</span>
           </p>
           <InfoPopover label="¿Qué es el modo demo?">
