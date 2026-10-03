@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="Task Manager" width="96" height="96">
+<img src="docs/assets/logo.png" alt="Darmix Tasking" width="96" height="96">
 
-# Task Manager
+# Darmix Tasking
 
 Aplicación web para gestionar proyectos y tareas: API RESTful con **Laravel 12** y **JWT**, y SPA en **React 19** con **Tailwind CSS**.
 
@@ -47,7 +47,7 @@ Aplicación web para gestionar proyectos y tareas: API RESTful con **Laravel 12*
 
 ## Descripción
 
-Task Manager permite a cada usuario organizar su trabajo en **proyectos** y **tareas**, con estado y prioridad.
+Darmix Tasking permite a cada usuario organizar su trabajo en **proyectos** y **tareas**, con estado y prioridad.
 
 - **Autenticación JWT:** registro, login, logout y renovación de token (refresh).
 - **Proyectos y tareas:** CRUD completo, con acceso restringido a los datos del propio usuario.
@@ -97,7 +97,7 @@ Los cuatro servicios comparten la red `task_manager_net`, definida en `docker-co
 ## Estructura del repositorio
 
 ```text
-grupo-balak-task-manager/
+darmix-tasking/
 ├── backend/                # API Laravel 12 + JWT (ver backend/README.md)
 │   ├── app/
 │   ├── database/
@@ -126,13 +126,13 @@ Levanta todo el sistema (base de datos, API y frontend) con Docker.
 **1. Clonar el repositorio:**
 
 ```bash
-git clone https://github.com/OrlandoGalvanVargas/grupo-balak-task-manager.git
+git clone https://github.com/OrlandoGalvanVargas/darmix-tasking.git
 ```
 
 **2. Entrar a la carpeta del proyecto:**
 
 ```bash
-cd grupo-balak-task-manager
+cd darmix-tasking
 ```
 
 **3. Construir y levantar los contenedores:**
